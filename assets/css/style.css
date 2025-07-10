@@ -1,0 +1,64 @@
+.cb-qr-code {
+  position: fixed;
+  bottom: 20px;
+  z-index: 9999;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  transition: transform 0.3s ease;
+  background: #ffffff;
+  padding: 10px;
+  box-shadow: 0px 0px 8px 2px #99999933;
+  border-radius: 5px;
+}
+
+.cb-qr-code img {
+  margin: auto;
+}
+
+.cb-qr-right {
+  right: 20px;
+}
+
+.cb-qr-left {
+  left: 20px;
+}
+
+.cb-qr-label {
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.cb-qr-image {
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.cb-qr-code:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.cb-qr-code:hover::after,
+.cb-qr-code.copied::after {
+  content: 'Copy Link';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: #222;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  white-space: nowrap;
+  z-index: 10000;
+  opacity: 0.95;
+  pointer-events: none;
+  transition: transform 0.2s cubic-bezier(.4, 2, .6, 1), font-size 0.2s;
+}
+
+.cb-qr-code.copied::after {
+  transform: translate(-50%, -50%) scale(0.7);
+  font-size: 10px;
+}

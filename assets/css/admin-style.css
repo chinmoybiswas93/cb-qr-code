@@ -1,0 +1,370 @@
+#cb-qr-code-settings-form {
+  margin-top: 20px;
+}
+
+#cb-qr-code-settings-form .form-group input,
+#cb-qr-code-settings-form .form-group select {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 18px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+#cb-qr-code-settings-form .form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.cb-qr-dashboard {
+  max-width: 1200px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+#cb-qr-code-preview {
+  background: white;
+  padding: 10px;
+  display: inline-block;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 18px;
+  border: 1.5px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+#cb-qr-code-preview .cb-qr-label {
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+
+.dashboard-cards {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.qqc-status-card {
+  max-width: 300px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.status-box {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.status-box.warning {
+  background: #fff4e5;
+  color: #b26a00;
+  border: 1px solid #ffd59e;
+}
+
+.status-box.success {
+  background: #e6f7e6;
+  color: #237804;
+  border: 1px solid #b7eb8f;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 40px;
+  border-radius: 7px;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px 18px 24px;
+  box-shadow: 0 0 15px 5px rgb(0 0 0 / 0%);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.plugin-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.01em;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-submit-btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.header-submit-btn:hover {
+  background: #ffb900;
+  color: #222;
+  cursor: pointer;
+}
+
+.quick-qr-dashboard .notice {
+  border-radius: 5px;
+  padding: 5px 12px;
+}
+
+.quick-qr-dashboard .notice-dismiss {
+  top: 4px;
+}
+
+.qqc-form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.qqc-form-row label {
+  flex: 0 0 170px;
+  margin-right: 14px;
+  font-weight: 500;
+  color: #222;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.qqc-form-row input,
+.qqc-form-row select {
+  flex: 1 1 0%;
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  background: #fafbfc;
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+.qqc-color-cols {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+}
+
+.qqc-color-cols>div>label {
+  display: inline-block;
+  font-size: 14px;
+}
+
+.qqc-color-label {
+  display: block;
+  font-size: 0.89rem;
+  font-weight: 400;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.qqc-input-unit-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.qqc-input-unit-row input {
+  flex: 1;
+}
+
+.qqc-input-unit-row .qqc-unit-indicator {
+  margin-left: 8px;
+  min-width: 24px;
+  text-align: right;
+  color: #888;
+  font-size: 12px;
+}
+
+.cbqr-tabs-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.cbqr-tabs-nav button {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+  margin-bottom: -1px;
+}
+
+.cbqr-tabs-nav button.active,
+.cbqr-tabs-nav button:hover {
+  background: #fff;
+  color: #ffb900;
+  border-bottom: 2px solid #ffb900;
+  z-index: 2;
+}
+
+.cbqr-tab-content {
+  background: #fff;
+  border-radius: 0 12px 12px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 32px 32px 24px 32px;
+  margin-bottom: 24px;
+  min-height: 320px;
+  display: none;
+}
+
+.cbqr-tab-content h2 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: #222;
+}
+
+.cbqr-tab-content p,
+.cbqr-tab-content label {
+  font-size: 1rem;
+}
+
+.cbqr-tab-content a {
+  color: #ffb900;
+  text-decoration: underline;
+}
+
+.cbqr-tab-content a:hover {
+  color: #222;
+}
+
+.cbqr-appearance-cols {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+
+.cbqr-appearance-cols form {
+  flex: 1 1 0%;
+  min-width: 320px;
+  max-width: 700px;
+}
+
+.cbqr-appearance-preview {
+  margin-top: 0;
+  background: #fff;
+  max-width: 350px;
+}
+
+
+.cbqr-appearance-preview h3{
+ margin: 0;
+}
+
+.qqc-form-row-posttypes label,
+.qqc-form-row-urlmode label {
+  width: 100%;
+  max-width: 100%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  display: block;
+}
+
+.qqc-form-row-checkboxes {
+  display: block;
+  flex-wrap: unset;
+  gap: unset;
+  margin-bottom: 18px;
+}
+
+.qqc-form-row-checkboxes label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 32px;
+  font-size: 1rem;
+  font-weight: 400;
+  min-width: unset;
+  cursor: pointer;
+  user-select: none;
+}
+
+.qqc-form-row-checkboxes input[type="checkbox"] {
+  accent-color: unset;
+  margin-right: 5px;
+}
+
+.qqc-form-row.qqc-form-row-urlmode-select {
+  min-height: 30px;
+}
+
+@media (max-width: 600px) {
+  .sticky-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 10px;
+  }
+
+  .header-right {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .qqc-form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .qqc-form-row label {
+    margin-bottom: 6px;
+    margin-right: 0;
+  }
+
+  .qqc-color-cols {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .qqc-form-row-checkboxes {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .cbqr-appearance-cols {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .cbqr-appearance-preview {
+    max-width: 100%;
+    width: 100%;
+  }
+}

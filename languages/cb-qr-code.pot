@@ -1,0 +1,165 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CB QR Code 1.0.0\n"
+"POT-Creation-Date: 2025-07-10 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: GitHub Copilot\n"
+"Language: en_US\n"
+
+#: includes/class-admin.php
+msgid "CB QR Code Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Please select at least one post type."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Please enter a valid custom URL."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Settings saved successfully."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Label is required."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Size must be between 50 and 1000."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Margin must be between 0 and 20."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Dark color must be a 6-digit hex code."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Light color must be a 6-digit hex code."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Logo URL must be a valid URL."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Logo size must be between 10 and 100."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Font size is required."
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Position must be left or right."
+msgstr ""
+
+#: templates/settings.php
+msgid "Show QR Code for these post types:"
+msgstr ""
+
+#: templates/settings.php
+msgid "QR Code URL Mode:"
+msgstr ""
+
+#: templates/settings.php
+msgid "Permalink"
+msgstr ""
+
+#: templates/settings.php
+msgid "Custom URL"
+msgstr ""
+
+#: templates/appearance.php
+msgid "QR Code Label"
+msgstr ""
+
+#: templates/appearance.php
+msgid "QR Code Size (px)"
+msgstr ""
+
+#: templates/appearance.php
+msgid "QR Code Margin"
+msgstr ""
+
+#: templates/appearance.php
+msgid "QR Code Colors"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Dark (hex)"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Light (hex)"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Logo URL (optional)"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Logo Size (%)"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Label Font Size"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Position"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Right"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Left"
+msgstr ""
+
+#: templates/appearance.php
+msgid "Preview"
+msgstr ""
+
+#: templates/about.php
+msgid "About CB QR Code"
+msgstr ""
+
+#: templates/about.php
+msgid "CB QR Code is a simple, modern plugin for displaying QR codes on your WordPress site. Easily share your content with a quick scan."
+msgstr ""
+
+#: templates/about.php
+msgid "Version: 1.0.0"
+msgstr ""
+
+#: templates/about.php
+msgid "Author: Chinmoy Biswas"
+msgstr ""
+
+#: templates/about.php
+msgid "Website:"
+msgstr ""
+
+#: templates/support.php
+msgid "Support"
+msgstr ""
+
+#: templates/support.php
+msgid "Need help? Visit the WordPress.org support forum or contact the author via GitHub."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "Scan Me"
+msgstr ""
