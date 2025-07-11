@@ -21,6 +21,9 @@ if (!defined('CB_QR_CODE_PATH')) {
 if (!defined('CB_QR_CODE_URL')) {
     define('CB_QR_CODE_URL', plugin_dir_url(__FILE__));
 }
+if (!defined('CB_QR_CODE_VERSION')) {
+    define('CB_QR_CODE_VERSION', '1.0.1');
+}
 
 function cb_qr_code_load_textdomain()
 {

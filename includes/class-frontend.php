@@ -3,7 +3,7 @@ namespace CBQRCode;
 if (!function_exists('CBQRCode\\get_settings')) {
     require_once CB_QR_CODE_PATH . 'includes/helpers.php';
 }
-use function CBQRCode\get_settings;
+use function CBQRCode\cbqr_get_settings;
 use function CBQRCode\get_allowed_post_types;
 class Frontend
 {
@@ -22,8 +22,8 @@ class Frontend
     }
     public function enqueue_scripts()
     {
-        wp_enqueue_style('cb-qr-code', CB_QR_CODE_URL . 'assets/css/style.css', [], time(), 'all');
-        wp_enqueue_script('cb-qr-code', CB_QR_CODE_URL . 'assets/js/script.js', ['jquery'], time(), true);
+        wp_enqueue_style('cb-qr-code', CB_QR_CODE_URL . 'assets/css/style.css', [], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), 'all');
+        wp_enqueue_script('cb-qr-code', CB_QR_CODE_URL . 'assets/js/script.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
     }
     public function append_qr_code($content)
     {
@@ -34,7 +34,7 @@ class Frontend
         if (!in_array($post_type, $allowed_post_types))
             return $content;
         $post_url = get_permalink();
-        $settings = get_settings();
+        $settings = cbqr_get_settings();
         $url_mode = $settings['cbqr-url-mode'] ?? 'permalink';
         $custom_url = $settings['cbqr-custom-url'] ?? '';
         $qr_url_text = $post_url;

@@ -1,48 +1,81 @@
-# CB QR Code WordPress Plugin
+# CB QR Code
 
-Easily add customizable QR codes to your WordPress posts, pages, or custom post types. Modern, modular, and extensible for developers and site owners alike.
+**Contributors:** chinmoybiswas93  
+**Tags:** qr code, sharing, shortcode, post, page  
+**Requires at least:** 6.0  
+**Tested up to:** 6.8
+**Stable tag:** 1.0.0  
+**License:** GPL-2.0+  
+**License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
-## Features
-- **Customizable QR Codes:** Adjust size, colors, margin, label, and add a logo.
-- **Copy QR Link:** Click the QR code to copy its link to the clipboard (with tooltip feedback).
-- **Custom QR Link:** Use the page/post URL or use your custom link in the QR content.
-- **Admin Interface:** Clean, tabbed settings panel for easy configuration.
-- **Hooks for Developers:** Add content before/after the QR code with `cb_qr_code_before` and `cb_qr_code_after` hooks.
-- **Live Preview:** See QR code changes instantly in the Appearance tab.
-- **Translation Ready:** Includes a `.pot` file for easy localization.
-
-## Usage
-1. **Install & Activate:** Upload and activate the plugin from your WordPress admin.
-2. **Configure:** Go to **WP Dashboard > CB QR Code** to adjust settings and appearance.
-3. **Display:** QR codes will appear on supported post types. Use the Appearance tab to style them.
-4. **Copy Link:** Click the QR code to copy its link.
-
-## Developer Hooks
-- `cb_qr_code_before` — Add content before the QR code.
-- `cb_qr_code_after` — Add content after the QR code.
-
-**Example:**
-```php
-add_filter('cb_qr_code_before', function ($output, $post_type, $settings) {
-	$output = 'hello world';
-	return $output;
-}, 10, 3);
-```
-
-## Screenshots
-1. **Admin Settings Panel:** [View Screenshot](https://prnt.sc/Dw2yKtR232mW)
-2. **Appearance Customization:** [View Screenshot](https://prnt.sc/n1OeXAkSpPBj)
-3. **Frontend QR Code Example:** [Example 1](https://prnt.sc/KB9aO2v1kN5R), [Example 2](https://prnt.sc/LNciOCAl4NB_)
- 
-## Translation
-- Use `languages/cb-qr-code.pot` to create your own translation.
-
-## Requirements
-- WordPress 5.0+
-- PHP 7.2+
-
-## Support
-For help or suggestions, open an issue or contact the plugin author.
+A simple plugin to display a QR code on your WordPress posts, pages, or custom post types for easy link sharing.
 
 ---
-**CB QR Code** — Clean, extensible QR codes for WordPress.
+
+## Description
+
+CB QR Code lets you add a customizable QR code to your WordPress content. Visitors can scan or click the QR code to quickly copy the link, making sharing your content effortless.
+
+---
+
+## Installation
+
+1. Upload the plugin files to the `/wp-content/plugins/cb-qr-code` directory, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+3. Go to **CB QR Code** in your WordPress admin menu to configure settings.
+
+---
+
+## Usage
+
+- Select which post types should display the QR code.
+- Customize the QR code appearance (size, margin, colors, label, logo, position).
+- Choose between permalink or custom URL for the QR code.
+- The QR code will automatically appear on the selected post types in the frontend.
+
+---
+
+## Key Features
+
+- Display QR codes on posts, pages, or custom post types.
+- Choose between permalink or custom URL for the QR code.
+- Customize QR code size, margin, colors, label, and logo.
+- Live preview in the Appearance tab.
+- Click QR code to copy the link (with visual feedback).
+- Developer hooks to add content before/after the QR code.
+
+---
+
+## Screenshots
+
+1. **Admin Settings Panel:**  
+   ![Admin Settings Panel](https://prnt.sc/Dw2yKtR232mW)
+2. **Appearance Customization:**  
+   ![Appearance Customization](https://prnt.sc/n1OeXAkSpPBj)
+
+---
+
+## Changelog
+
+### 1.0.0
+* Initial release.
+
+---
+
+## License
+
+This plugin is licensed under the GPLv2 or later.  
+See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html) for details.
+
+---
+
+## Upgrade Notice
+
+### 1.0.0
+First release.
+
+---
+
+## Author
+
+Developed by [Chinmoy Biswas](https://github.com/chinmoybiswas93)

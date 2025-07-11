@@ -32,9 +32,9 @@ class Admin
     {
         if ($hook !== 'toplevel_page_cb-qr-code')
             return;
-        wp_enqueue_style('cb-qr-code-admin', CB_QR_CODE_URL . 'assets/css/admin-style.css', [], time(), 'all');
-        wp_enqueue_script('cb-qr-code-admin', CB_QR_CODE_URL . 'assets/js/admin-script.js', ['jquery'], time(), true);
-        wp_enqueue_script('cb-qr-code-admin-tabs', CB_QR_CODE_URL . 'assets/js/admin-tabs.js', ['jquery'], time(), true);
+        wp_enqueue_style('cb-qr-code-admin', CB_QR_CODE_URL . 'assets/css/admin-style.css', [], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), 'all');
+        wp_enqueue_script('cb-qr-code-admin', CB_QR_CODE_URL . 'assets/js/admin-script.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
+        wp_enqueue_script('cb-qr-code-admin-tabs', CB_QR_CODE_URL . 'assets/js/admin-tabs.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
         wp_localize_script('cb-qr-code-admin', 'CBQRCodeAjax', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('cb_qr_code_ajax_nonce'),
