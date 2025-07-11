@@ -49,9 +49,11 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 ## Screenshots
 
 1. **Admin Settings Panel:**  
-   ![Admin Settings Panel](https://prnt.sc/Dw2yKtR232mW)
+   [Admin Settings Panel](https://prnt.sc/Dw2yKtR232mW)
 2. **Appearance Customization:**  
-   ![Appearance Customization](https://prnt.sc/n1OeXAkSpPBj)
+   [Appearance Customization](https://prnt.sc/n1OeXAkSpPBj)
+2. **Appearance Customization:**  
+   [Front End Appearance ](https://prnt.sc/sqqiv3tPF2xR)
 
 ---
 
@@ -59,6 +61,8 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 
 ### 1.0.0
 * Initial release.
+### 1.0.1
+* Updated About and Support
 
 ---
 
