@@ -1,11 +1,7 @@
 jQuery(document).ready(function ($) {
-  console.log("Admin Panel script loaded");
+  const settingsForm = $("#cbqc-settings-form");
+  const appearanceForm = $("#cbqc-appearance-form");
 
-  const form = $("#cb-qr-code-settings-form");
-  const settingsForm = $("#cb-qr-code-settings-form");
-  const appearanceForm = $("#cb-qr-code-appearance-form");
-
-  // Generate QR code preview
   function generateQrCodePreview() {
     const label = $("#qr-code-label").val() || "Scan Me";
     const labelSize = $("#qr-code-font-size").val() || "16";
@@ -33,9 +29,8 @@ jQuery(document).ready(function ($) {
     const queryString = new URLSearchParams(params).toString();
     const qrCodeUrl = qrurl + queryString;
     const qrCodeImage = `<img src="${qrCodeUrl}" alt="QR Code Preview" style="max-width: 100%; height: auto;">`;
-    const previewContainer = $("#cb-qr-code-preview");
+    const previewContainer = $("#cbqc-preview");
     
-    // Apply label size styling
     const labelHtml = `<div class="cb-qr-label" style="font-size: ${labelSize}px; font-weight:bold;">${label}</div>`;
     previewContainer.html(labelHtml + qrCodeImage);
   }
@@ -58,7 +53,7 @@ jQuery(document).ready(function ($) {
         const dismissBtn =
           '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
         if (response.success) {
-          if (form.attr('id') === 'cb-qr-code-appearance-form') {
+          if (form.attr('id') === 'cbqc-appearance-form') {
             form.prepend(
               '<div class="notice notice-success is-dismissible">' +
                 dismissBtn +
@@ -85,7 +80,7 @@ jQuery(document).ready(function ($) {
             errorHtml += "<li>" + err + "</li>";
           });
           errorHtml += "</ul></div>";
-          if (form.attr('id') === 'cb-qr-code-appearance-form') {
+          if (form.attr('id') === 'cbqc-appearance-form') {
             form.prepend(errorHtml);
           } else {
             form.before(errorHtml);
@@ -100,7 +95,7 @@ jQuery(document).ready(function ($) {
           errorMsg =
             "Security check failed (invalid or expired nonce). Please reload the page and try again.";
         }
-        if (form.attr('id') === 'cb-qr-code-appearance-form') {
+        if (form.attr('id') === 'cbqc-appearance-form') {
           form.prepend(
             '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
               dismissBtn +
@@ -123,14 +118,14 @@ jQuery(document).ready(function ($) {
 
   $(document).on("click", ".header-submit-btn", function (e) {
     e.preventDefault();
-    if ($("#cbqr-tab-appearance").is(":visible")) {
-      ajaxSave($("#cb-qr-code-appearance-form"), 'appearance');
-    } else if ($("#cbqr-tab-settings").is(":visible")) {
-      ajaxSave($("#cb-qr-code-settings-form"), 'settings');
+    if ($("#cbqc-tab-appearance").is(":visible")) {
+      ajaxSave($("#cbqc-appearance-form"), 'appearance');
+    } else if ($("#cbqc-tab-settings").is(":visible")) {
+      ajaxSave($("#cbqc-settings-form"), 'settings');
     }
   });
 
-  $("#cb-qr-code-settings-form, #cb-qr-code-appearance-form").off("submit");
+  $("#cbqc-settings-form, #cbqc-appearance-form").off("submit");
 
   settingsForm.on("submit", function (e) {
     e.preventDefault();
@@ -162,21 +157,21 @@ jQuery(document).ready(function ($) {
 
   generateQrCodePreview();
 
-  $(document).on("click", ".cbqr-tabs-nav button[data-tab='appearance']", function () {
+  $(document).on("click", ".cbqc-tabs-nav button[data-tab='appearance']", function () {
     setTimeout(generateQrCodePreview, 10);
   });
 
-  $(document).on('change', "input[name='cbqr-url-mode']", function () {
+  $(document).on('change', "input[name='cbqc-url-mode']", function () {
     if ($(this).val() === 'custom') {
-      $('#cbqr-custom-url').show();
+      $('#cbqc-custom-url').show();
     } else {
-      $('#cbqr-custom-url').hide();
+      $('#cbqc-custom-url').hide();
     }
   });
 
-  if ($("input[name='cbqr-url-mode']:checked").val() === 'custom') {
-    $('#cbqr-custom-url').show();
+  if ($("input[name='cbqc-url-mode']:checked").val() === 'custom') {
+    $('#cbqc-custom-url').show();
   } else {
-    $('#cbqr-custom-url').hide();
+    $('#cbqc-custom-url').hide();
   }
 });

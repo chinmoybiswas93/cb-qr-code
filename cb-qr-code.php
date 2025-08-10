@@ -22,14 +22,8 @@ if (!defined('CB_QR_CODE_URL')) {
     define('CB_QR_CODE_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('CB_QR_CODE_VERSION')) {
-    define('CB_QR_CODE_VERSION', '1.0.1');
+    define('CB_QR_CODE_VERSION', '1.0.0');
 }
-
-function cb_qr_code_load_textdomain()
-{
-    load_plugin_textdomain('cb-qr-code', false, dirname(plugin_basename(__FILE__)) . '/languages');
-}
-add_action('plugins_loaded', 'cb_qr_code_load_textdomain');
 
 spl_autoload_register(function ($class) {
     $prefix = 'CBQRCode\\';

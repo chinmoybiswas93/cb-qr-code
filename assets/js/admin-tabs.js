@@ -1,13 +1,13 @@
 jQuery(document).ready(function ($) {
-  $(".cbqr-tabs-nav button").on("click", function () {
+  $(".cbqc-tabs-nav button").on("click", function () {
     var tab = $(this).data("tab");
-    $(".cbqr-tabs-nav button").removeClass("active");
+    $(".cbqc-tabs-nav button").removeClass("active");
     $(this).addClass("active");
-    $(".cbqr-tab-content").hide();
-    $("#cbqr-tab-" + tab).show();
+    $(".cbqc-tab-content").hide();
+    $("#cbqc-tab-" + tab).show();
   });
   // Show first tab by default
-  $(".cbqr-tabs-nav button").first().addClass("active");
-  $(".cbqr-tab-content").hide();
-  $(".cbqr-tab-content").first().show();
+  $(".cbqc-tabs-nav button").first().addClass("active");
+  $(".cbqc-tab-content").hide();
+  $(".cbqc-tab-content").first().show();
 });

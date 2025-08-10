@@ -35,8 +35,8 @@ class Frontend
             return $content;
         $post_url = get_permalink();
         $settings = cbqr_get_settings();
-        $url_mode = $settings['cbqr-url-mode'] ?? 'permalink';
-        $custom_url = $settings['cbqr-custom-url'] ?? '';
+        $url_mode = $settings['cbqc-url-mode'] ?? 'permalink';
+        $custom_url = $settings['cbqc-custom-url'] ?? '';
         $qr_url_text = $post_url;
         if ($url_mode === 'custom' && !empty($custom_url))
             $qr_url_text = $custom_url;

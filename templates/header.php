@@ -11,7 +11,7 @@
         <span class="plugin-title">CB QR Code</span>
     </div>
     <div class="header-right">
-        <button type="submit" form="cb-qr-code-settings-form"
+        <button type="submit" form="cbqc-settings-form"
             class="header-submit-btn"><?php esc_html_e('Save Settings', 'cb-qr-code'); ?></button>
     </div>
 </div>
