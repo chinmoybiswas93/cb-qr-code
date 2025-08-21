@@ -25,15 +25,17 @@ if (!defined('CB_QR_CODE_VERSION')) {
     define('CB_QR_CODE_VERSION', '1.0.0');
 }
 
-spl_autoload_register(function ($class) {
-    $prefix = 'CBQRCode\\';
-    if (strpos($class, $prefix) === 0) {
-        $file = CB_QR_CODE_PATH . 'includes/class-' . strtolower(str_replace($prefix, '', $class)) . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-        }
-    }
-});
+if (file_exists(CB_QR_CODE_PATH . 'vendor/autoload.php')) {
+    require_once CB_QR_CODE_PATH . 'vendor/autoload.php';
+} else {
+    add_action('admin_notices', function () {
+        echo '<div class="notice notice-error"><p>' . esc_html__(
+            'CB QR Code: Composer dependencies not installed. Please run "composer install" in the plugin directory.',
+            'cb-qr-code'
+        ) . '</p></div>';
+    });
+    return;
+}
 
 function cb_qr_code_init_plugin()
 {

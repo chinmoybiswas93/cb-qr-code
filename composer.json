@@ -1,0 +1,20 @@
+{
+    "name": "cb/qr-code",
+    "description": "WordPress QR Code Plugin with local generation",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=7.4",
+        "endroid/qr-code": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CBQRCode\\": "includes/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": ">=7.4"
+        }
+    },
+    "minimum-stability": "stable"
+}

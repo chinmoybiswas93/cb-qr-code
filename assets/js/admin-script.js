@@ -3,36 +3,26 @@ jQuery(document).ready(function ($) {
   const appearanceForm = $("#cbqc-appearance-form");
 
   function generateQrCodePreview() {
-    const label = $("#qr-code-label").val() || "Scan Me";
-    const labelSize = $("#qr-code-font-size").val() || "16";
-    const size = $("#qr-code-size").val() || "150";
-    const margin = $("#qr-code-margin").val() || "2";
-    const format = "png";
-    const colorDark = $("#qr-code-dark").val() || "000000";
-    const colorLight = $("#qr-code-light").val() || "ffffff";
-    const logourl = $("#qr-code-logo-url").val() || "";
-    const logoSize = $("#qr-code-logo-size").val() || "50";
-
-    const qrurl = "https://quickchart.io/qr?";
-    const params = {
-      text: CBQRCodeAjax.siteUrl,
-      size: size,
-      margin: margin,
-      format: format,
-      dark: colorDark,
-      light: colorLight,
-    };
-    if (logourl) {
-      params.centerImageUrl = logourl;
-      params.centerImageSizeRatio = logoSize / 100;
-    }
-    const queryString = new URLSearchParams(params).toString();
-    const qrCodeUrl = qrurl + queryString;
-    const qrCodeImage = `<img src="${qrCodeUrl}" alt="QR Code Preview" style="max-width: 100%; height: auto;">`;
-    const previewContainer = $("#cbqc-preview");
+    // Get form data but exclude existing action parameter
+    const formFields = $("#cbqc-appearance-form").serializeArray();
+    const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');
+    const formData = $.param(filteredFields) + 
+      "&action=cb_qr_code_preview&security=" + CBQRCodeAjax.nonce;
     
-    const labelHtml = `<div class="cb-qr-label" style="font-size: ${labelSize}px; font-weight:bold;">${label}</div>`;
-    previewContainer.html(labelHtml + qrCodeImage);
+    $.ajax({
+      url: CBQRCodeAjax.ajax_url,
+      type: "POST",
+      data: formData,
+      dataType: "json",
+      success: function(response) {
+        if (response.success) {
+          $("#cbqc-preview").html(response.data.html);
+        }
+      },
+      error: function() {
+        $("#cbqc-preview").html('<p>Error generating preview</p>');
+      }
+    });
   }
 
   // AJAX save for both forms
