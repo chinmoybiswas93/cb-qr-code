@@ -5,20 +5,20 @@ jQuery(document).ready(function ($) {
   function generateQrCodePreview() {
     const formFields = $("#cbqc-appearance-form").serializeArray();
     const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');
-    const formData = $.param(filteredFields) + 
+    const formData = $.param(filteredFields) +
       "&action=cb_qr_code_preview&security=" + CBQRCodeAjax.nonce;
-    
+
     $.ajax({
       url: CBQRCodeAjax.ajax_url,
       type: "POST",
       data: formData,
       dataType: "json",
-      success: function(response) {
+      success: function (response) {
         if (response.success) {
           $("#cbqc-preview").html(response.data.html);
         }
       },
-      error: function() {
+      error: function () {
         $("#cbqc-preview").html('<p>Error generating preview</p>');
       }
     });
@@ -41,33 +41,23 @@ jQuery(document).ready(function ($) {
         const dismissBtn =
           '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
         if (response.success) {
+          const noticeHtml = '<div class="notice notice-success is-dismissible">' +
+            dismissBtn + "<p>" + response.data.message + "</p></div>";
+          
           if (form.attr('id') === 'cbqc-appearance-form') {
-            form.prepend(
-              '<div class="notice notice-success is-dismissible">' +
-                dismissBtn +
-                "<p>" +
-                response.data.message +
-                "</p></div>"
-            );
+            form.prepend(noticeHtml);
           } else {
-            form.before(
-              '<div class="notice notice-success is-dismissible">' +
-                dismissBtn +
-                "<p>" +
-                response.data.message +
-                "</p></div>"
-            );
+            form.before(noticeHtml);
           }
         } else {
           const errors = response.data.errors || ["An error occurred."];
-          let errorHtml =
-            '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
-            dismissBtn +
-            "<ul>";
+          let errorHtml = '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
+            dismissBtn + "<ul>";
           $.each(errors, function (i, err) {
             errorHtml += "<li>" + err + "</li>";
           });
           errorHtml += "</ul></div>";
+          
           if (form.attr('id') === 'cbqc-appearance-form') {
             form.prepend(errorHtml);
           } else {
@@ -80,28 +70,27 @@ jQuery(document).ready(function ($) {
           '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
         let errorMsg = "An unexpected error occurred.";
         if (xhr.status === 403) {
-          errorMsg =
-            "Security check failed (invalid or expired nonce). Please reload the page and try again.";
+          errorMsg = "Security check failed (invalid or expired nonce). Please reload the page and try again.";
         }
+        
+        const errorHtml = '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
+          dismissBtn + "<ul><li>" + errorMsg + "</li></ul></div>";
+          
         if (form.attr('id') === 'cbqc-appearance-form') {
-          form.prepend(
-            '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
-              dismissBtn +
-              "<ul><li>" +
-              errorMsg +
-              "</li></ul></div>"
-          );
+          form.prepend(errorHtml);
         } else {
-          form.before(
-            '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
-              dismissBtn +
-              "<ul><li>" +
-              errorMsg +
-              "</li></ul></div>"
-          );
+          form.before(errorHtml);
         }
       },
     });
+  }
+
+  function handleCustomUrlVisibility() {
+    if ($("input[name='cbqc-url-mode']:checked").val() === 'custom') {
+      $('#cbqc-custom-url').show();
+    } else {
+      $('#cbqc-custom-url').hide();
+    }
   }
 
   $(document).on("click", ".header-submit-btn", function (e) {
@@ -113,53 +102,20 @@ jQuery(document).ready(function ($) {
     }
   });
 
-  $("#cbqc-settings-form, #cbqc-appearance-form").off("submit");
-
-  settingsForm.on("submit", function (e) {
-    e.preventDefault();
-    ajaxSave(settingsForm);
-  });
-  appearanceForm.on("submit", function (e) {
-    e.preventDefault();
-    ajaxSave(appearanceForm);
+  $(document).on("click", ".notice.is-dismissible .notice-dismiss", function () {
+    $(this).closest(".notice").fadeOut(200, function () {
+      $(this).remove();
+    });
   });
 
-  $(document).on(
-    "click",
-    ".notice.is-dismissible .notice-dismiss",
-    function () {
-      $(this)
-        .closest(".notice")
-        .fadeOut(200, function () {
-          $(this).remove();
-        });
-    }
-  );
-
-  settingsForm.on("change input", "input, select", function () {
-    generateQrCodePreview();
-  });
   appearanceForm.on("change input", "input, select", function () {
     generateQrCodePreview();
   });
 
-  generateQrCodePreview();
-
-  $(document).on("click", ".cbqc-tabs-nav button[data-tab='appearance']", function () {
-    setTimeout(generateQrCodePreview, 10);
-  });
-
   $(document).on('change', "input[name='cbqc-url-mode']", function () {
-    if ($(this).val() === 'custom') {
-      $('#cbqc-custom-url').show();
-    } else {
-      $('#cbqc-custom-url').hide();
-    }
+    handleCustomUrlVisibility();
   });
 
-  if ($("input[name='cbqc-url-mode']:checked").val() === 'custom') {
-    $('#cbqc-custom-url').show();
-  } else {
-    $('#cbqc-custom-url').hide();
-  }
+  generateQrCodePreview();
+  handleCustomUrlVisibility();
 });
