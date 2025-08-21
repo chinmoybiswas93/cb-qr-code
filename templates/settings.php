@@ -1,11 +1,11 @@
 <?php
-if (!function_exists('CBQRCode\\get_settings')) {
+if (!function_exists('CBQRCode\\get_current_settings')) {
     require_once CB_QR_CODE_PATH . 'includes/helpers.php';
 }
-use function CBQRCode\cbqr_get_settings;
+use function CBQRCode\get_current_settings;
 use function CBQRCode\get_allowed_post_types;
 
-$settings = cbqr_get_settings();
+$settings = get_current_settings();
 $post_types = get_post_types(['public' => true], 'objects');
 $allowed_post_types = get_allowed_post_types();
 ?>

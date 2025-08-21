@@ -125,10 +125,8 @@ class Admin
 
         $sanitized = $this->sanitize_settings_tab($input);
         
-        // Get existing settings to preserve appearance settings
         $existing_settings = get_option('cb_qr_code_settings', []);
         
-        // Merge new settings with existing ones to preserve other tab settings
         $merged_settings = array_merge($existing_settings, $sanitized['settings']);
         
         update_option('cb_qr_code_settings', $merged_settings);
@@ -147,10 +145,8 @@ class Admin
 
         $sanitized = $this->sanitize_appearance_tab($input);
         
-        // Get existing settings to preserve settings tab values
         $existing_settings = get_option('cb_qr_code_settings', []);
         
-        // Merge new appearance settings with existing ones
         $merged_settings = array_merge($existing_settings, $sanitized);
         
         update_option('cb_qr_code_settings', $merged_settings);

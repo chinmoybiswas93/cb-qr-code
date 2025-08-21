@@ -1,4 +1,4 @@
-<h2>About CB QR Code</h2>
+<h2>About CB QR Code Plugin</h2>
 <p>CB QR Code is a simple, modern plugin for displaying QR codes on your WordPress site. Easily share your content with
   a quick scan.</p>
 <ul>

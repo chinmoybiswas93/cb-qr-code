@@ -1,9 +1,9 @@
 <?php
 namespace CBQRCode;
-if (!function_exists('CBQRCode\\get_settings')) {
+if (!function_exists('CBQRCode\\get_current_settings')) {
     require_once CB_QR_CODE_PATH . 'includes/helpers.php';
 }
-use function CBQRCode\cbqr_get_settings;
+use function CBQRCode\get_current_settings;
 use function CBQRCode\get_allowed_post_types;
 class Frontend
 {
@@ -29,12 +29,16 @@ class Frontend
     {
         if (!is_singular())
             return $content;
+
         $post_type = get_post_type();
+
         $allowed_post_types = get_allowed_post_types();
+
         if (!in_array($post_type, $allowed_post_types))
             return $content;
+
         $post_url = get_permalink();
-        $settings = cbqr_get_settings();
+        $settings = get_current_settings();
         $url_mode = $settings['cbqc-url-mode'] ?? 'permalink';
         $custom_url = $settings['cbqc-custom-url'] ?? '';
         $qr_url_text = $post_url;
@@ -50,6 +54,7 @@ class Frontend
         $fontSize = $settings['qr-code-font-size'] ?? '12px';
         $position = $settings['qr-code-position'] ?? 'right';
         $qr_url = "https://quickchart.io/qr?";
+
         $params = [
             'text' => $qr_url_text,
             'size' => $size,
@@ -58,6 +63,7 @@ class Frontend
             'light' => $light,
             'format' => 'png',
         ];
+
         if (!empty($logo_url)) {
             $params['centerImageUrl'] = $logo_url;
             $params['centerImageSizeRatio'] = $logo_size / 100;

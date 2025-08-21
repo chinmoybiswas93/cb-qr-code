@@ -1,10 +1,10 @@
 <?php
-if (!function_exists('CBQRCode\\cbqr_get_settings')) {
+if (!function_exists('CBQRCode\\get_current_settings')) {
     require_once CB_QR_CODE_PATH . 'includes/helpers.php';
 }
-use function CBQRCode\cbqr_get_settings;
+use function CBQRCode\get_current_settings;
 
-$settings = cbqr_get_settings();
+$settings = get_current_settings();
 ?>
 <div class="cbqc-appearance-cols">
     <form id="cbqc-appearance-form" method="post" action="#" autocomplete="off">
