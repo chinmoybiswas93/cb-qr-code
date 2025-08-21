@@ -3,7 +3,6 @@ jQuery(document).ready(function ($) {
   const appearanceForm = $("#cbqc-appearance-form");
 
   function generateQrCodePreview() {
-    // Get form data but exclude existing action parameter
     const formFields = $("#cbqc-appearance-form").serializeArray();
     const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');
     const formData = $.param(filteredFields) + 
@@ -25,7 +24,6 @@ jQuery(document).ready(function ($) {
     });
   }
 
-  // AJAX save for both forms
   function ajaxSave(form, tab) {
     const formData =
       form.serialize() +

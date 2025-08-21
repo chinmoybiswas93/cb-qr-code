@@ -75,7 +75,6 @@ class Frontend
         ]);
 
         if (empty($qr_data_uri)) {
-            error_log('CB QR Code: Failed to generate QR code for URL: ' . $qr_url_text);
             return $content; 
         }
 

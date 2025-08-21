@@ -231,7 +231,8 @@ class Admin
                 'cbqc-url-mode' => sanitize_text_field($url_mode),
                 'cbqc-custom-url' => $custom_url,
             ],
-            'post_types' => isset($input['cbqc-post-types']) ? array_map('sanitize_text_field', $input['cbqc-post-types']) : []
+            'post_types' => isset($input['cbqc-post-types']) ? 
+                array_values(array_diff(array_map('sanitize_text_field', $input['cbqc-post-types']), ['attachment'])) : []
         ];
     }
     private function sanitize_appearance_tab($input)

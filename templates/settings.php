@@ -7,6 +7,7 @@ use function CBQRCode\get_allowed_post_types;
 
 $settings = get_current_settings();
 $post_types = get_post_types(['public' => true], 'objects');
+unset($post_types['attachment']);
 $allowed_post_types = get_allowed_post_types();
 ?>
 <div class="cbqc-form-row cbqc-form-row-posttypes">

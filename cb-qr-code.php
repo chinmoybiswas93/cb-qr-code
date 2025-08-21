@@ -2,7 +2,7 @@
 /*
 Plugin Name: CB QR Code 
 Description: A simple QR code plugin which shows a QR Code in pages for sharing the links easily.
-Version: 1.0.0
+Version: 1.0.2
 Author: Chinmoy Biswas
 Author URI: https://github.com/chinmoybiswas93
 Text Domain: cb-qr-code
@@ -22,7 +22,7 @@ if (!defined('CB_QR_CODE_URL')) {
     define('CB_QR_CODE_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('CB_QR_CODE_VERSION')) {
-    define('CB_QR_CODE_VERSION', '1.0.0');
+    define('CB_QR_CODE_VERSION', '1.0.2');
 }
 
 if (file_exists(CB_QR_CODE_PATH . 'vendor/autoload.php')) {

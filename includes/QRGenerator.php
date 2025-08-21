@@ -10,13 +10,6 @@ use Endroid\QrCode\Color\Color;
 
 class QRGenerator
 {
-    /**
-     * Generate QR code and return data URI
-     *
-     * @param string $text Text to encode
-     * @param array $options Generation options
-     * @return string Data URI of the generated QR code
-     */
     public static function generate($text, $options = [])
     {
         try {
@@ -27,7 +20,6 @@ class QRGenerator
             $logoPath = $options['logo'] ?? '';
             $logoSize = $options['logo_size'] ?? 50;
 
-            // Ensure we have a valid text
             if (empty($text)) {
                 return '';
             }
@@ -48,35 +40,22 @@ class QRGenerator
                         ->logoResizeToWidth($logoSize);
             }
 
-            // Note: Label is handled in HTML, not in QR code generation
-
             $result = $builder->build();
             $dataUri = $result->getDataUri();
             
             return $dataUri;
         } catch (\Exception $e) {
-            // Log error for debugging
-            error_log('QR Code Generation Error: ' . $e->getMessage());
             return '';
         }
     }
 
-    /**
-     * Convert hex color to RGB array
-     *
-     * @param string $hex Hex color code
-     * @return array RGB values
-     */
     public static function hex_to_rgb($hex)
     {
         $hex = ltrim($hex, '#');
         
-        // Ensure we have a 6-character hex code
         if (strlen($hex) === 3) {
-            // Convert 3-char hex to 6-char (e.g., 'f0f' -> 'ff00ff')
             $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         } elseif (strlen($hex) !== 6) {
-            // Invalid hex, default to black
             $hex = '000000';
         }
         
@@ -87,12 +66,6 @@ class QRGenerator
         ];
     }
 
-    /**
-     * Download and cache logo from URL
-     *
-     * @param string $url Logo URL
-     * @return string Local path to logo or empty string
-     */
     public static function download_logo($url)
     {
         if (empty($url)) return '';
@@ -102,12 +75,10 @@ class QRGenerator
         $filename = sanitize_file_name(basename($url));
         $local_path = $logo_dir . $filename;
         
-        // Create directory if it doesn't exist
         if (!file_exists($logo_dir)) {
             wp_mkdir_p($logo_dir);
         }
         
-        // Download logo if not cached
         if (!file_exists($local_path)) {
             $response = wp_remote_get($url, ['timeout' => 30]);
             if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
