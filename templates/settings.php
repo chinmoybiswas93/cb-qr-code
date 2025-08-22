@@ -38,7 +38,7 @@ $allowed_post_types = get_allowed_post_types();
             <input type="radio" name="cbqc-url-mode" value="custom" <?php checked(($settings['cbqc-url-mode'] ?? ''), 'custom'); ?>>
             <?php esc_html_e('Custom URL', 'cb-qr-code'); ?>
         </label>
-        <input type="url" id="cbqc-custom-url" name="cbqc-custom-url" placeholder="https://example.com/your-url" value="<?php echo esc_url($settings['cbqc-custom-url'] ?? ''); ?>" style="min-width:260px;<?php echo (($settings['cbqc-url-mode'] ?? 'permalink') === 'custom') ? '' : 'display:none;'; ?>">
+        <input type="url" id="cbqc-custom-url" name="cbqc-custom-url" placeholder="Enter custom URL" value="<?php echo esc_url($settings['cbqc-custom-url'] ?? ''); ?>" style="min-width:260px;<?php echo (($settings['cbqc-url-mode'] ?? 'permalink') === 'custom') ? '' : 'display:none;'; ?>">
     </div>
     <input type="hidden" name="action" value="cb_qr_code_save_settings">
     <input type="hidden" name="tab" value="settings">

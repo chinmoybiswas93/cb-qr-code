@@ -2,6 +2,86 @@ jQuery(document).ready(function ($) {
   const settingsForm = $("#cbqc-settings-form");
   const appearanceForm = $("#cbqc-appearance-form");
 
+
+  let mediaUploader;
+
+  function initMediaUploader() {
+    if (mediaUploader) {
+      mediaUploader.open();
+      return;
+    }
+
+    mediaUploader = wp.media({
+      title: 'Select Logo Image',
+      button: {
+        text: 'Use this image'
+      },
+      library: {
+        type: 'image'
+      },
+      multiple: false
+    });
+
+    mediaUploader.on('select', function() {
+      const attachment = mediaUploader.state().get('selection').first().toJSON();
+      
+
+      $('#qr-code-logo-id').val(attachment.id);
+      $('#qr-code-logo-url').val(attachment.url);
+      
+
+      let displayName = attachment.filename || attachment.title || 'Selected image';
+      if (displayName.length > 25) {
+        const lastDotIndex = displayName.lastIndexOf('.');
+        const extension = lastDotIndex !== -1 ? displayName.substring(lastDotIndex) : '';
+        const nameWithoutExt = lastDotIndex !== -1 ? displayName.substring(0, lastDotIndex) : displayName;
+        
+        if (nameWithoutExt.length > 15) {
+          const start = nameWithoutExt.substring(0, 5);
+          const end = nameWithoutExt.substring(nameWithoutExt.length - 6);
+          displayName = start + '...' + end + extension;
+        }
+      }
+      
+
+      $('.cbqc-selected-image-name').text(displayName);
+      
+
+      $('.cbqc-remove-media').show();
+      
+
+      generateQrCodePreview();
+    });
+
+    mediaUploader.open();
+  }
+
+  function removeMediaSelection() {
+
+    $('#qr-code-logo-id').val('');
+    $('#qr-code-logo-url').val('');
+    
+
+    $('.cbqc-selected-image-name').text('No image selected');
+    
+
+    $('.cbqc-remove-media').hide();
+    
+
+    generateQrCodePreview();
+  }
+
+
+  $(document).on('click', '.cbqc-select-media', function(e) {
+    e.preventDefault();
+    initMediaUploader();
+  });
+
+  $(document).on('click', '.cbqc-remove-media', function(e) {
+    e.preventDefault();
+    removeMediaSelection();
+  });
+
   function generateQrCodePreview() {
     const formFields = $("#cbqc-appearance-form").serializeArray();
     const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');

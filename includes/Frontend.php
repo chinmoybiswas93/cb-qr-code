@@ -57,6 +57,7 @@ class Frontend
         $dark = $settings['qr-code-dark'] ?? '000000';
         $light = $settings['qr-code-light'] ?? 'ffffff';
         $label = $settings['qr-code-label'] ?? __('Scan Me', 'cb-qr-code');
+        $logo_id = $settings['qr-code-logo-id'] ?? 0;
         $logo_url = $settings['qr-code-logo-url'] ?? '';
         $logo_size = $settings['qr-code-logo-size'] ?? 50;
         $fontSize = $settings['qr-code-font-size'] ?? '12px';
@@ -65,12 +66,19 @@ class Frontend
         $foreground = QRGenerator::hex_to_rgb($dark);
         $background = QRGenerator::hex_to_rgb($light);
 
+        $logo_path = '';
+        if (!empty($logo_id)) {
+            $logo_path = QRGenerator::get_logo_path_from_attachment($logo_id);
+        } elseif (!empty($logo_url)) {
+            $logo_path = QRGenerator::download_logo($logo_url);
+        }
+
         $qr_data_uri = QRGenerator::generate($qr_url_text, [
             'size' => $size,
             'margin' => $margin,
             'foreground' => $foreground,
             'background' => $background,
-            'logo' => $logo_url ? QRGenerator::download_logo($logo_url) : '',
+            'logo' => $logo_path,
             'logo_size' => $logo_size
         ]);
 
@@ -86,14 +94,14 @@ class Frontend
             '<div class="cb-qr-code %s" data-url="%s"><div>%s</div><div class="cb-qr-label" style="font-size:%s">%s</div><img src="%s" alt="%s" style="width: %dpx; height: %dpx;"><div>%s</div></div>',
             esc_attr($position_class),
             esc_url($qr_url_text),
-            esc_html($before_qr),
+            wp_kses_post($before_qr),
             esc_attr($fontSize),
             esc_html($label),
-            $qr_data_uri, 
+            esc_attr($qr_data_uri), 
             esc_attr(__('QR Code', 'cb-qr-code')),
-            intval($size),
-            intval($size),
-            esc_html($after_qr)
+            absint($size),
+            absint($size),
+            wp_kses_post($after_qr)
         );
         return $content . $qr_html;
     }

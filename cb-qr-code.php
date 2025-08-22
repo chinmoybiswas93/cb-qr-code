@@ -29,6 +29,7 @@ if (file_exists(CB_QR_CODE_PATH . 'vendor/autoload.php')) {
     require_once CB_QR_CODE_PATH . 'vendor/autoload.php';
 } else {
     add_action('admin_notices', function () {
+        /* translators: Error message shown when Composer dependencies are missing */
         echo '<div class="notice notice-error"><p>' . esc_html__(
             'CB QR Code: Composer dependencies not installed. Please run "composer install" in the plugin directory.',
             'cb-qr-code'

@@ -1,6 +1,6 @@
 # CB QR Code
 
-**Contributors:** chinmoybiswas93  
+**Contributors:** chinmoy709  
 **Tags:** qr code, sharing, shortcode, post, page  
 **Requires at least:** 6.0  
 **Tested up to:** 6.8

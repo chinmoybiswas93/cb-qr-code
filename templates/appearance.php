@@ -48,9 +48,53 @@ $settings = get_current_settings();
             </div>
         </div>
         <div class="cbqc-form-row">
-            <label for="qr-code-logo-url"><?php esc_html_e('Logo URL (optional)', 'cb-qr-code'); ?></label>
-            <input type="url" id="qr-code-logo-url" name="qr-code-logo-url" placeholder="https://example.com/logo.png"
-                value="<?php echo esc_url($settings['qr-code-logo-url'] ?? ''); ?>">
+            <label for="qr-code-logo-id"><?php esc_html_e('Logo Image (optional)', 'cb-qr-code'); ?></label>
+            <div class="cbqc-media-upload-wrapper">
+                <input type="hidden" id="qr-code-logo-id" name="qr-code-logo-id" 
+                    value="<?php echo esc_attr($settings['qr-code-logo-id'] ?? ''); ?>">
+                <input type="hidden" id="qr-code-logo-url" name="qr-code-logo-url" 
+                    value="<?php echo esc_url($settings['qr-code-logo-url'] ?? ''); ?>">
+                
+                <div class="cbqc-media-horizontal" style="display: flex; align-items: center; gap: 10px;">
+                    <span class="cbqc-selected-image-name" style="flex: 1; color: #666; font-style: italic; min-height: 20px;">
+                        <?php 
+                        $logo_id = $settings['qr-code-logo-id'] ?? '';
+                        if (!empty($logo_id)) {
+                            $attachment = get_post($logo_id);
+                            if ($attachment) {
+                                $filename = get_post_meta($logo_id, '_wp_attached_file', true);
+                                if ($filename) {
+                                    $filename = basename($filename);
+                                } else {
+                                    $filename = $attachment->post_title;
+                                }
+                                
+                                if (strlen($filename) > 25) {
+                                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                                    $name_without_ext = pathinfo($filename, PATHINFO_FILENAME);
+                                    if (strlen($name_without_ext) > 15) {
+                                        $start = substr($name_without_ext, 0, 5);
+                                        $end = substr($name_without_ext, -6);
+                                        $filename = $start . '...' . $end . ($extension ? '.' . $extension : '');
+                                    }
+                                }
+                                echo esc_html($filename);
+                            } else {
+                                esc_html_e('No image selected', 'cb-qr-code');
+                            }
+                        } else {
+                            esc_html_e('No image selected', 'cb-qr-code');
+                        }
+                        ?>
+                    </span>
+                    <button type="button" class="button cbqc-select-media">
+                        <?php esc_html_e('Select Image', 'cb-qr-code'); ?>
+                    </button>
+                    <button type="button" class="button cbqc-remove-media" style="<?php echo empty($logo_id) ? 'display:none;' : ''; ?>">
+                        <?php esc_html_e('Remove Image', 'cb-qr-code'); ?>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="cbqc-form-row">
             <label for="qr-code-logo-size"><?php esc_html_e('Logo Size (%)', 'cb-qr-code'); ?></label>
