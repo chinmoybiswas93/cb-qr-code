@@ -1,5 +1,8 @@
 <?php
-namespace CBQRCode;
+namespace ChinmoyBiswas\CBQRCode;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class Admin
 {
     private static $instance = null;
@@ -12,47 +15,49 @@ class Admin
     }
     public function __construct()
     {
-        add_action('admin_menu', [$this, 'add_admin_menu']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-        add_action('wp_ajax_cb_qr_code_save_settings', [$this, 'ajax_save_settings']);
-        add_action('wp_ajax_cb_qr_code_preview', [$this, 'ajax_preview']);
+        add_action('admin_menu', [$this, 'cbqrcode_add_admin_menu']);
+        add_action('admin_enqueue_scripts', [$this, 'cbqrcode_enqueue_admin_assets']);
+        add_action('wp_ajax_cbqrcode_save_settings', [$this, 'cbqrcode_ajax_save_settings']);
+        add_action('wp_ajax_cbqrcode_preview', [$this, 'cbqrcode_ajax_preview']);
     }
-    public function add_admin_menu()
+    public function cbqrcode_add_admin_menu()
     {
         add_menu_page(
             'CB QR Code Settings',
             'CB QR Code',
             'manage_options',
             'cb-qr-code',
-            [$this, 'settings_page'],
+            [$this, 'cbqrcode_settings_page'],
             'dashicons-admin-generic',
             100
         );
     }
-    public function enqueue_admin_scripts($hook)
-    {
-        if ($hook !== 'toplevel_page_cb-qr-code')
+    public function cbqrcode_enqueue_admin_assets($hook) {
+        if ($hook !== 'toplevel_page_cb-qr-code') {
             return;
+        }
+        
+        wp_enqueue_style('cbqrcode-admin-style', plugin_dir_url(dirname(__FILE__)) . 'assets/css/admin-style.css', array(), CBQRCODE_PLUGIN_VERSION);
+
+        wp_enqueue_script('cbqrcode-admin-script', plugin_dir_url(dirname(__FILE__)) . 'assets/js/admin-script.js', ['jquery'], CBQRCODE_PLUGIN_VERSION, true);
+        wp_enqueue_script('cbqrcode-admin-tabs', plugin_dir_url(dirname(__FILE__)) . 'assets/js/admin-tabs.js', ['jquery'], CBQRCODE_PLUGIN_VERSION, true);
+        
+        wp_localize_script('cbqrcode-admin-script', 'CBQRCodeAjax', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('cbqrcode_ajax_nonce')
+        ]);
         
         wp_enqueue_media();
-        
-        wp_enqueue_style('cbqc-admin', CB_QR_CODE_URL . 'assets/css/admin-style.css', [], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), 'all');
-        wp_enqueue_script('cbqc-admin', CB_QR_CODE_URL . 'assets/js/admin-script.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
-        wp_enqueue_script('cbqc-admin-tabs', CB_QR_CODE_URL . 'assets/js/admin-tabs.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
-        wp_localize_script('cbqc-admin', 'CBQRCodeAjax', [
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('cb_qr_code_ajax_nonce'),
-            'siteUrl' => site_url(),
-        ]);
     }
-    public function settings_page()
+
+    public function cbqrcode_settings_page()
     {
         if (!current_user_can('manage_options'))
             return;
 
         echo '<div class="wrap">';
-        echo '<div class="cb-qr-dashboard">';
-        include CB_QR_CODE_PATH . 'templates/header.php';
+        echo '<div class="cbqrcode-dashboard">';
+        include CBQRCODE_PLUGIN_PATH . 'templates/header.php';
 
         $tabs = [
             'appearance' => [
@@ -73,16 +78,16 @@ class Admin
             ],
         ];
 
-        echo '<div class="cbqc-tabs-nav" style="margin: 20px 0 1px 0;">';
+        echo '<div class="cbqrcode-tabs-nav" style="margin: 20px 0 1px 0;">';
         foreach ($tabs as $tab => $data) {
             echo '<button type="button" data-tab="' . esc_attr($tab) . '">' . esc_html($data['label']) . '</button>';
         }
         echo '</div>';
 
         foreach ($tabs as $tab => $data) {
-            $full_path = CB_QR_CODE_PATH . $data['file'];
+            $full_path = CBQRCODE_PLUGIN_PATH . $data['file'];
             if (file_exists($full_path)) {
-                echo '<div id="cbqc-tab-' . esc_attr($tab) . '" class="cbqc-tab-content" style="display:none;">';
+                echo '<div id="cbqrcode-tab-' . esc_attr($tab) . '" class="cbqrcode-tab-content" style="display:none;">';
                 include $full_path;
                 echo '</div>';
             }
@@ -90,9 +95,9 @@ class Admin
         echo '</div>';
         echo '</div>';
     }
-    public function ajax_save_settings()
+    public function cbqrcode_ajax_save_settings()
     {
-                if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['security'] ?? '')), 'cb_qr_code_ajax_nonce')) {
+        if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['security'] ?? '')), 'cbqrcode_ajax_nonce')) {
             wp_send_json_error(['errors' => [esc_html__('Security check failed.', 'cb-qr-code')]]);
         }
 
@@ -104,63 +109,27 @@ class Admin
         $post_data = map_deep(wp_unslash($_POST), 'sanitize_text_field');
 
         if ($tab === 'settings') {
-            $input = $this->sanitize_settings_input($_POST);
-            $this->handle_settings_tab($input);
+            $input = $this->cbqrcode_sanitize_settings_input($_POST);
+            $this->cbqrcode_handle_settings_tab($input);
         } else {
-            $input = $this->sanitize_appearance_input($_POST);
-            $this->handle_appearance_tab($input);
+            $input = $this->cbqrcode_sanitize_appearance_input($_POST);
+            $this->cbqrcode_handle_appearance_tab($input);
         }
     }
 
-    /**
-     * Legacy method - no longer used. Kept for reference.
-     * Use sanitize_settings_input(), sanitize_appearance_input(), or sanitize_preview_input() instead.
-     */
-    /*
-    public function sanitize_recursive($data)
-    {
-        if (!is_array($data)) {
-            return sanitize_text_field($data);
-        }
-
-        $sanitized = [];
-        foreach ($data as $key => $value) {
-            $sanitized_key = sanitize_key($key);
-
-            if (is_array($value)) {
-                $sanitized[$sanitized_key] = $this->sanitize_recursive($value);
-            } else {
-                switch ($key) {
-                    case 'qr-code-dark':
-                    case 'qr-code-light':
-                        $sanitized[$sanitized_key] = sanitize_hex_color_no_hash($value);
-                        break;
-                    case 'qr-code-logo-url':
-                        $sanitized[$sanitized_key] = esc_url_raw($value);
-                        break;
-                    default:
-                        $sanitized[$sanitized_key] = sanitize_text_field($value);
-                        break;
-                }
-            }
-        }
-        return $sanitized;
-    }
-    */
-
-    private function sanitize_settings_input($post_data)
+    private function cbqrcode_sanitize_settings_input($post_data)
     {
 
-        $settings_fields = [
-            'cbqc-url-mode',
-            'cbqc-custom-url',
-            'cbqc-post-types',
+        $expected_fields = [
+            'cbqrcode-url-mode',
+            'cbqrcode-custom-url',
+            'cbqrcode-post-types',
             'action',
             'tab'
         ];
 
         $input = array();
-        foreach ($settings_fields as $field) {
+        foreach ($expected_fields as $field) {
             if (isset($post_data[$field])) {
                 $clean_key = sanitize_key($field);
                 $value = wp_unslash($post_data[$field]);
@@ -169,7 +138,7 @@ class Admin
                     $input[$clean_key] = array_map('sanitize_text_field', $value);
                 } else {
                     switch ($clean_key) {
-                        case 'cbqc-custom-url':
+                        case 'cbqrcode-custom-url':
                             $input[$clean_key] = esc_url_raw($value);
                             break;
                         default:
@@ -182,7 +151,7 @@ class Admin
         return $input;
     }
 
-    private function sanitize_appearance_input($post_data)
+    private function cbqrcode_sanitize_appearance_input($post_data)
     {
         $appearance_fields = [
             'qr-code-label',
@@ -232,7 +201,7 @@ class Admin
         return $input;
     }
 
-    private function sanitize_preview_input($post_data)
+    private function cbqrcode_sanitize_preview_input($post_data)
     {
 
         $preview_fields = [
@@ -280,57 +249,55 @@ class Admin
         return $input;
     }
 
-    private function handle_settings_tab($input)
+    private function cbqrcode_handle_settings_tab($input)
     {
-        $errors = $this->validate_settings_tab($input);
+        $errors = $this->cbqrcode_validate_settings_tab($input);
 
         if (!empty($errors)) {
             $errors = array_map('esc_html', $errors);
             wp_send_json_error(['errors' => $errors]);
         }
 
-        $sanitized = $this->sanitize_settings_tab($input);
+        $sanitized = $this->cbqrcode_sanitize_settings_tab($input);
         
-        $existing_settings = get_option('cb_qr_code_settings', []);
+        $existing_settings = get_option('cbqrcode_settings', []);
         
         $merged_settings = array_merge($existing_settings, $sanitized['settings']);
         
-        update_option('cb_qr_code_settings', $merged_settings);
-        update_option('cb_qr_code_post_types', $sanitized['post_types']);
+        update_option('cbqrcode_settings', $merged_settings);
+        update_option('cbqrcode_post_types', $sanitized['post_types']);
 
         wp_send_json_success(['message' => esc_html__('Settings saved successfully.', 'cb-qr-code')]);
     }
-    private function handle_appearance_tab($input)
+    private function cbqrcode_handle_appearance_tab($input)
     {
-        $errors = $this->validate_appearance_tab($input);
+        $errors = $this->cbqrcode_validate_appearance_tab($input);
 
         if (!empty($errors)) {
             $errors = array_map('esc_html', $errors);
             wp_send_json_error(['errors' => $errors]);
         }
 
-        $sanitized = $this->sanitize_appearance_tab($input);
+        $sanitized = $this->cbqrcode_sanitize_appearance_tab($input);
         
-        $existing_settings = get_option('cb_qr_code_settings', []);
+        $existing_settings = get_option('cbqrcode_settings', []);
         
         $merged_settings = array_merge($existing_settings, $sanitized);
         
-        update_option('cb_qr_code_settings', $merged_settings);
+        update_option('cbqrcode_settings', $merged_settings);
 
         wp_send_json_success(['message' => esc_html__('Settings saved successfully.', 'cb-qr-code')]);
     }
 
-    private function validate_settings_tab($input)
+    private function cbqrcode_validate_settings_tab($input)
     {
         $errors = [];
 
-
-        if (empty($input['cbqc-post-types']) || !is_array($input['cbqc-post-types'])) {
+        if (empty($input['cbqrcode-post-types']) || !is_array($input['cbqrcode-post-types'])) {
             $errors[] = esc_html__('Please select at least one post type.', 'cb-qr-code');
         } else {
-
             $valid_post_types = get_post_types(['public' => true], 'names');
-            foreach ($input['cbqc-post-types'] as $post_type) {
+            foreach ($input['cbqrcode-post-types'] as $post_type) {
                 $sanitized_post_type = sanitize_text_field($post_type);
                 if (!in_array($sanitized_post_type, $valid_post_types, true)) {
                     $errors[] = sprintf(
@@ -342,14 +309,13 @@ class Admin
             }
         }
 
-
-        $url_mode = sanitize_text_field($input['cbqc-url-mode'] ?? 'permalink');
+        $url_mode = sanitize_text_field($input['cbqrcode-url-mode'] ?? 'permalink');
         if (!in_array($url_mode, ['permalink', 'custom'], true)) {
             $errors[] = esc_html__('Invalid URL mode selected.', 'cb-qr-code');
         }
 
         if ($url_mode === 'custom') {
-            $custom_url = esc_url_raw($input['cbqc-custom-url'] ?? '');
+            $custom_url = esc_url_raw($input['cbqrcode-custom-url'] ?? '');
             if (empty($custom_url) || !filter_var($custom_url, FILTER_VALIDATE_URL)) {
                 $errors[] = esc_html__('Please enter a valid custom URL.', 'cb-qr-code');
             }
@@ -357,7 +323,7 @@ class Admin
 
         return $errors;
     }
-    private function validate_appearance_tab($input)
+    private function cbqrcode_validate_appearance_tab($input)
     {
         $errors = [];
 
@@ -424,20 +390,20 @@ class Admin
         return $errors;
     }
 
-    private function sanitize_settings_tab($input)
+    private function cbqrcode_sanitize_settings_tab($input)
     {
-        $url_mode = sanitize_text_field($input['cbqc-url-mode'] ?? 'permalink');
+        $url_mode = sanitize_text_field($input['cbqrcode-url-mode'] ?? 'permalink');
         $custom_url = '';
 
-        if ($url_mode === 'custom' && isset($input['cbqc-custom-url'])) {
-            $custom_url = esc_url_raw($input['cbqc-custom-url']);
+        if ($url_mode === 'custom' && isset($input['cbqrcode-custom-url'])) {
+            $custom_url = esc_url_raw($input['cbqrcode-custom-url']);
         }
 
         $post_types = [];
-        if (isset($input['cbqc-post-types']) && is_array($input['cbqc-post-types'])) {
+        if (isset($input['cbqrcode-post-types']) && is_array($input['cbqrcode-post-types'])) {
 
             $valid_post_types = get_post_types(['public' => true], 'names');
-            foreach ($input['cbqc-post-types'] as $post_type) {
+            foreach ($input['cbqrcode-post-types'] as $post_type) {
                 $sanitized_post_type = sanitize_text_field($post_type);
                 if (in_array($sanitized_post_type, $valid_post_types, true) && $sanitized_post_type !== 'attachment') {
                     $post_types[] = $sanitized_post_type;
@@ -447,13 +413,13 @@ class Admin
 
         return [
             'settings' => [
-                'cbqc-url-mode' => $url_mode,
-                'cbqc-custom-url' => $custom_url,
+                'cbqrcode-url-mode' => $url_mode,
+                'cbqrcode-custom-url' => $custom_url,
             ],
             'post_types' => array_values($post_types)
         ];
     }
-    private function sanitize_appearance_tab($input)
+    private function cbqrcode_sanitize_appearance_tab($input)
     {
 
         $logo_id = absint($input['qr-code-logo-id'] ?? 0);
@@ -489,10 +455,10 @@ class Admin
         ];
     }
 
-    public function ajax_preview()
+    public function cbqrcode_ajax_preview()
     {
 
-        if (!check_ajax_referer('cb_qr_code_ajax_nonce', 'security', false)) {
+        if (!check_ajax_referer('cbqrcode_ajax_nonce', 'security', false)) {
             wp_send_json_error(['message' => esc_html__('Security check failed.', 'cb-qr-code')]);
             return;
         }
@@ -505,7 +471,16 @@ class Admin
         
 
 
-        $input = $this->sanitize_preview_input($_POST);
+        $input = $this->cbqrcode_sanitize_preview_input($_POST);
+        
+        $current_settings = get_option('cbqrcode_settings', []);
+        $url_mode = $current_settings['cbqrcode-url-mode'] ?? 'permalink';
+        $custom_url = $current_settings['cbqrcode-custom-url'] ?? '';
+        
+        $qr_url_text = site_url();
+        if ($url_mode === 'custom' && !empty($custom_url)) {
+            $qr_url_text = $custom_url;
+        }
         
         $label = sanitize_text_field($input['qr-code-label'] ?? 'Scan Me');
         $size = max(50, min(1000, absint($input['qr-code-size'] ?? 150)));
@@ -528,7 +503,7 @@ class Admin
             $logo_path = QRGenerator::download_logo($logo_url);
         }
         
-        $qr_data_uri = QRGenerator::generate(esc_url(site_url()), [
+        $qr_data_uri = QRGenerator::generate(esc_url($qr_url_text), [
             'size' => $size,
             'margin' => $margin,
             'foreground' => $foreground,
@@ -543,7 +518,7 @@ class Admin
         }
         
         $html = sprintf(
-            '<div class="cb-qr-label" style="font-size: %dpx; font-weight:bold; margin-bottom: 10px;">%s</div><img src="%s" alt="QR Code Preview" style="max-width: 100%%; height: auto;">',
+            '<div class="cbqrcode-label" style="font-size: %dpx; margin-bottom: 10px;">%s</div><img src="%s" alt="QR Code Preview" style="max-width: 100%%; height: auto;">',
             $font_size,
             esc_html($label),
             esc_attr($qr_data_uri)  

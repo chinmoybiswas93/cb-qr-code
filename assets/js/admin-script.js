@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
-  const settingsForm = $("#cbqc-settings-form");
-  const appearanceForm = $("#cbqc-appearance-form");
+  const settingsForm = $("#cbqrcode-settings-form");
+  const appearanceForm = $("#cbqrcode-appearance-form");
 
 
   let mediaUploader;
@@ -44,10 +44,10 @@ jQuery(document).ready(function ($) {
       }
       
 
-      $('.cbqc-selected-image-name').text(displayName);
+      $('.cbqrcode-selected-image-name').text(displayName);
       
 
-      $('.cbqc-remove-media').show();
+      $('.cbqrcode-remove-media').show();
       
 
       generateQrCodePreview();
@@ -62,31 +62,31 @@ jQuery(document).ready(function ($) {
     $('#qr-code-logo-url').val('');
     
 
-    $('.cbqc-selected-image-name').text('No image selected');
+    $('.cbqrcode-selected-image-name').text('No image selected');
     
 
-    $('.cbqc-remove-media').hide();
+    $('.cbqrcode-remove-media').hide();
     
 
     generateQrCodePreview();
   }
 
 
-  $(document).on('click', '.cbqc-select-media', function(e) {
+  $(document).on('click', '.cbqrcode-select-media', function(e) {
     e.preventDefault();
     initMediaUploader();
   });
 
-  $(document).on('click', '.cbqc-remove-media', function(e) {
+  $(document).on('click', '.cbqrcode-remove-media', function(e) {
     e.preventDefault();
     removeMediaSelection();
   });
 
   function generateQrCodePreview() {
-    const formFields = $("#cbqc-appearance-form").serializeArray();
+    const formFields = $("#cbqrcode-appearance-form").serializeArray();
     const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');
     const formData = $.param(filteredFields) +
-      "&action=cb_qr_code_preview&security=" + CBQRCodeAjax.nonce;
+      "&action=cbqrcode_preview&security=" + CBQRCodeAjax.nonce;
 
     $.ajax({
       url: CBQRCodeAjax.ajax_url,
@@ -95,11 +95,11 @@ jQuery(document).ready(function ($) {
       dataType: "json",
       success: function (response) {
         if (response.success) {
-          $("#cbqc-preview").html(response.data.html);
+          $("#cbqrcode-preview").html(response.data.html);
         }
       },
       error: function () {
-        $("#cbqc-preview").html('<p>Error generating preview</p>');
+        $("#cbqrcode-preview").html('<p>Error generating preview</p>');
       }
     });
   }
@@ -107,7 +107,7 @@ jQuery(document).ready(function ($) {
   function ajaxSave(form, tab) {
     const formData =
       form.serialize() +
-      "&action=cb_qr_code_save_settings" +
+      "&action=cbqrcode_save_settings" +
       "&tab=" + tab +
       "&security=" +
       CBQRCodeAjax.nonce;
@@ -124,7 +124,7 @@ jQuery(document).ready(function ($) {
           const noticeHtml = '<div class="notice notice-success is-dismissible">' +
             dismissBtn + "<p>" + response.data.message + "</p></div>";
           
-          if (form.attr('id') === 'cbqc-appearance-form') {
+          if (form.attr('id') === 'cbqrcode-appearance-form') {
             form.prepend(noticeHtml);
           } else {
             form.before(noticeHtml);
@@ -138,7 +138,7 @@ jQuery(document).ready(function ($) {
           });
           errorHtml += "</ul></div>";
           
-          if (form.attr('id') === 'cbqc-appearance-form') {
+          if (form.attr('id') === 'cbqrcode-appearance-form') {
             form.prepend(errorHtml);
           } else {
             form.before(errorHtml);
@@ -156,7 +156,7 @@ jQuery(document).ready(function ($) {
         const errorHtml = '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
           dismissBtn + "<ul><li>" + errorMsg + "</li></ul></div>";
           
-        if (form.attr('id') === 'cbqc-appearance-form') {
+        if (form.attr('id') === 'cbqrcode-appearance-form') {
           form.prepend(errorHtml);
         } else {
           form.before(errorHtml);
@@ -166,19 +166,19 @@ jQuery(document).ready(function ($) {
   }
 
   function handleCustomUrlVisibility() {
-    if ($("input[name='cbqc-url-mode']:checked").val() === 'custom') {
-      $('#cbqc-custom-url').show();
+    if ($("input[name='cbqrcode-url-mode']:checked").val() === 'custom') {
+      $('#cbqrcode-custom-url').show();
     } else {
-      $('#cbqc-custom-url').hide();
+      $('#cbqrcode-custom-url').hide();
     }
   }
 
   $(document).on("click", ".header-submit-btn", function (e) {
     e.preventDefault();
-    if ($("#cbqc-tab-appearance").is(":visible")) {
-      ajaxSave($("#cbqc-appearance-form"), 'appearance');
-    } else if ($("#cbqc-tab-settings").is(":visible")) {
-      ajaxSave($("#cbqc-settings-form"), 'settings');
+    if ($("#cbqrcode-tab-appearance").is(":visible")) {
+      ajaxSave($("#cbqrcode-appearance-form"), 'appearance');
+    } else if ($("#cbqrcode-tab-settings").is(":visible")) {
+      ajaxSave($("#cbqrcode-settings-form"), 'settings');
     }
   });
 
@@ -192,7 +192,7 @@ jQuery(document).ready(function ($) {
     generateQrCodePreview();
   });
 
-  $(document).on('change', "input[name='cbqc-url-mode']", function () {
+  $(document).on('change', "input[name='cbqrcode-url-mode']", function () {
     handleCustomUrlVisibility();
   });
 

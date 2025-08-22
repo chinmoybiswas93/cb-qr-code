@@ -1,19 +1,14 @@
 <?php
-namespace CBQRCode;
+namespace ChinmoyBiswas\CBQRCode;
 
-use function CBQRCode\get_current_settings;
-use function CBQRCode\get_allowed_post_types;
+if ( ! defined( 'ABSPATH' ) ) exit; 
+
+use function ChinmoyBiswas\CBQRCode\get_current_settings;
+use function ChinmoyBiswas\CBQRCode\get_allowed_post_types;
 
 class Frontend
 {
     private static $instance = null;
-
-    private function load_helpers()
-    {
-        if (!function_exists('CBQRCode\\get_current_settings')) {
-            require_once CB_QR_CODE_PATH . 'includes/helpers.php';
-        }
-    }
 
     public static function get_instance()
     {
@@ -22,18 +17,18 @@ class Frontend
         }
         return self::$instance;
     }
+    
     public function __construct()
     {
-        $this->load_helpers();
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
-        add_filter('the_content', [$this, 'append_qr_code']);
+        add_action('wp_enqueue_scripts', [$this, 'cbqrcode_enqueue_scripts']);
+        add_filter('the_content', [$this, 'cbqrcode_append_qr_code']);
     }
-    public function enqueue_scripts()
+    public function cbqrcode_enqueue_scripts()
     {
-        wp_enqueue_style('cb-qr-code', CB_QR_CODE_URL . 'assets/css/style.css', [], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), 'all');
-        wp_enqueue_script('cb-qr-code', CB_QR_CODE_URL . 'assets/js/script.js', ['jquery'], defined('CB_QR_CODE_VERSION') ? CB_QR_CODE_VERSION : time(), true);
+        wp_enqueue_style('cbqrcode-frontend-style', CBQRCODE_PLUGIN_URL . 'assets/css/style.css', [], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), 'all');
+        wp_enqueue_script('cbqrcode-frontend-script', CBQRCODE_PLUGIN_URL . 'assets/js/script.js', ['jquery'], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), true);
     }
-    public function append_qr_code($content)
+    public function cbqrcode_append_qr_code($content)
     {
         if (!is_singular())
             return $content;
@@ -47,8 +42,8 @@ class Frontend
 
         $post_url = get_permalink();
         $settings = get_current_settings();
-        $url_mode = $settings['cbqc-url-mode'] ?? 'permalink';
-        $custom_url = $settings['cbqc-custom-url'] ?? '';
+        $url_mode = $settings['cbqrcode-url-mode'] ?? 'permalink';
+        $custom_url = $settings['cbqrcode-custom-url'] ?? '';
         $qr_url_text = $post_url;
         if ($url_mode === 'custom' && !empty($custom_url))
             $qr_url_text = $custom_url;
@@ -86,12 +81,12 @@ class Frontend
             return $content; 
         }
 
-        $before_qr = apply_filters('cb_qr_code_before', '', $post_type, $settings);
-        $after_qr = apply_filters('cb_qr_code_after', '', $post_type, $settings);
+        $before_qr = apply_filters('cbqrcode_before_qr_code', '', $post_type, $settings);
+        $after_qr = apply_filters('cbqrcode_after_qr_code', '', $post_type, $settings);
 
-        $position_class = ($position == 'left') ? 'cb-qr-left' : 'cb-qr-right';
+        $position_class = ($position == 'left') ? 'cbqrcode-left' : 'cbqrcode-right';
         $qr_html = sprintf(
-            '<div class="cb-qr-code %s" data-url="%s"><div>%s</div><div class="cb-qr-label" style="font-size:%s">%s</div><img src="%s" alt="%s" style="width: %dpx; height: %dpx;"><div>%s</div></div>',
+            '<div class="cbqrcode-qr %s" data-url="%s"><div>%s</div><div class="cbqrcode-label" style="font-size:%spx">%s</div><img src="%s" alt="%s" style="width: %dpx; height: %dpx;"><div>%s</div></div>',
             esc_attr($position_class),
             esc_url($qr_url_text),
             wp_kses_post($before_qr),

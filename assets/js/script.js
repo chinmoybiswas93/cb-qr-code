@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-  $(".cb-qr-code").on("click", function () {
+  $(".cbqrcode-qr").on("click", function () {
     const $qr = $(this);
     const qrText = $qr.data('url');
     if (qrText) {

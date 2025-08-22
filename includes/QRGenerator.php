@@ -1,5 +1,7 @@
 <?php
-namespace CBQRCode;
+namespace ChinmoyBiswas\CBQRCode;
+
+if ( ! defined( 'ABSPATH' ) ) exit; 
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;

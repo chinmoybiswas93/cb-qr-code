@@ -15,18 +15,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!defined('CB_QR_CODE_PATH')) {
-    define('CB_QR_CODE_PATH', plugin_dir_path(__FILE__));
+if (!defined('CBQRCODE_PLUGIN_PATH')) {
+    define('CBQRCODE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 }
-if (!defined('CB_QR_CODE_URL')) {
-    define('CB_QR_CODE_URL', plugin_dir_url(__FILE__));
+if (!defined('CBQRCODE_PLUGIN_URL')) {
+    define('CBQRCODE_PLUGIN_URL', plugin_dir_url(__FILE__));
 }
-if (!defined('CB_QR_CODE_VERSION')) {
-    define('CB_QR_CODE_VERSION', '1.0.2');
+if (!defined('CBQRCODE_PLUGIN_VERSION')) {
+    define('CBQRCODE_PLUGIN_VERSION', '1.0.2');
 }
 
-if (file_exists(CB_QR_CODE_PATH . 'vendor/autoload.php')) {
-    require_once CB_QR_CODE_PATH . 'vendor/autoload.php';
+if (file_exists(CBQRCODE_PLUGIN_PATH . 'vendor/autoload.php')) {
+    require_once CBQRCODE_PLUGIN_PATH . 'vendor/autoload.php';
 } else {
     add_action('admin_notices', function () {
         /* translators: Error message shown when Composer dependencies are missing */
@@ -38,12 +38,12 @@ if (file_exists(CB_QR_CODE_PATH . 'vendor/autoload.php')) {
     return;
 }
 
-function cb_qr_code_init_plugin()
+function cbqrcode_init_plugin()
 {
     if (is_admin()) {
-        CBQRCode\Admin::get_instance();
+        ChinmoyBiswas\CBQRCode\Admin::get_instance();
     } else {
-        CBQRCode\Frontend::get_instance();
+        ChinmoyBiswas\CBQRCode\Frontend::get_instance();
     }
 }
-add_action('plugins_loaded', 'cb_qr_code_init_plugin');
+add_action('plugins_loaded', 'cbqrcode_init_plugin');

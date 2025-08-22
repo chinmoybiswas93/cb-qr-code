@@ -1,3 +1,6 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; 
+?>
 <div class="dashboard-header sticky-header">
     <div class="header-left">
         <span class="qr-logo" style="display:inline-block;vertical-align:middle;margin-right:10px;">
@@ -11,7 +14,7 @@
         <span class="plugin-title">CB QR Code</span>
     </div>
     <div class="header-right">
-        <button type="submit" form="cbqc-settings-form"
+        <button type="submit" form="cbqrcode-settings-form"
             class="header-submit-btn"><?php esc_html_e('Save Settings', 'cb-qr-code'); ?></button>
     </div>
 </div>

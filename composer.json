@@ -8,8 +8,11 @@
     },
     "autoload": {
         "psr-4": {
-            "CBQRCode\\": "includes/"
-        }
+            "ChinmoyBiswas\\CBQRCode\\": "includes/"
+        },
+        "files": [
+            "includes/helpers.php"
+        ]
     },
     "config": {
         "platform": {
