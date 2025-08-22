@@ -518,7 +518,7 @@ class Admin
         }
         
         $html = sprintf(
-            '<div class="cbqrcode-label" style="font-size: %dpx; margin-bottom: 10px;">%s</div><img src="%s" alt="QR Code Preview" style="max-width: 100%%; height: auto;">',
+            '<div class="cbqrcode-label" style="font-size: %dpx;">%s</div><img src="%s" alt="QR Code Preview" style="max-width: 100%%; height: auto;">',
             $font_size,
             esc_html($label),
             esc_attr($qr_data_uri)  
