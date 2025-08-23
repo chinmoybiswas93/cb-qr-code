@@ -20,7 +20,7 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 
 ## Installation
 
-1. Upload the plugin files to the `/wp-content/plugins/cb-qr-code` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Go to **CB QR Code** in your WordPress admin menu to configure settings.
 
@@ -54,11 +54,11 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 ## Screenshots
 
 1. **Admin Settings Panel:**  
-   [Admin Settings Panel](https://prnt.sc/Dw2yKtR232mW)
+   [Admin Settings Panel](https://prnt.sc/i1Sl7fuZl485)
 2. **Appearance Customization:**  
-   [Appearance Customization](https://prnt.sc/n1OeXAkSpPBj)
+   [Appearance Customization](https://prnt.sc/5T6O8ug2xBY1)
 2. **Appearance Customization:**  
-   [Front End Appearance ](https://prnt.sc/sqqiv3tPF2xR)
+   [Front End Appearance ](https://prnt.sc/2aBKEroKsAnF)
 
 ---
 
