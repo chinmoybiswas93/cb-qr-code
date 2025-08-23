@@ -20,9 +20,7 @@ class QRGenerator
                 return '';
             }
             
-
             $text = sanitize_text_field($text);
-            
 
             $size = isset($options['size']) ? max(50, min(1000, absint($options['size']))) : 300;
             $margin = isset($options['margin']) ? max(0, min(20, absint($options['margin']))) : 10;
@@ -31,13 +29,11 @@ class QRGenerator
             $logoPath = isset($options['logo']) ? sanitize_text_field($options['logo']) : '';
             $logoSize = isset($options['logo_size']) ? max(10, min(100, absint($options['logo_size']))) : 50;
 
-
             foreach (['foregroundColor', 'backgroundColor'] as $color_var) {
                 $color = $$color_var;
                 if (!is_array($color) || count($color) !== 3) {
                     $$color_var = ($color_var === 'foregroundColor') ? [0, 0, 0] : [255, 255, 255];
                 } else {
-
                     $$color_var = array_map(function($val) {
                         return max(0, min(255, absint($val)));
                     }, $color);
@@ -54,7 +50,6 @@ class QRGenerator
                 ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
                 ->foregroundColor(new Color($foregroundColor[0], $foregroundColor[1], $foregroundColor[2]))
                 ->backgroundColor(new Color($backgroundColor[0], $backgroundColor[1], $backgroundColor[2]));
-
 
             if (!empty($logoPath) && file_exists($logoPath) && is_readable($logoPath)) {
 
@@ -91,87 +86,51 @@ class QRGenerator
         ];
     }
 
-    public static function download_logo($url)
+    public static function is_supported_image_format($attachment_id)
     {
+        if (!is_numeric($attachment_id) || $attachment_id <= 0) {
+            return false;
+        }
+        
+        $attachment_id = absint($attachment_id);
+        
+        if (!wp_attachment_is_image($attachment_id)) {
+            return false;
+        }
+        
+        $file_path = get_attached_file($attachment_id);
+        
+        if (!$file_path || !file_exists($file_path) || !is_readable($file_path)) {
+            return false;
+        }
+        
+        $image_info = @getimagesize($file_path);
+        if ($image_info === false) {
+            return false;
+        }
+        
+        $allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
+        return in_array($image_info[2], $allowed_types, true);
+    }
 
-        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+    public static function get_image_format_name($attachment_id)
+    {
+        if (!is_numeric($attachment_id) || $attachment_id <= 0) {
             return '';
         }
         
-
-        $parsed_url = wp_parse_url($url);
-        if (!isset($parsed_url['scheme']) || !in_array($parsed_url['scheme'], ['http', 'https'], true)) {
+        $file_path = get_attached_file(absint($attachment_id));
+        
+        if (!$file_path || !file_exists($file_path)) {
             return '';
         }
         
-        $upload_dir = wp_upload_dir();
-        if (is_wp_error($upload_dir) || !isset($upload_dir['basedir'])) {
+        $image_info = @getimagesize($file_path);
+        if ($image_info === false || !isset($image_info['mime'])) {
             return '';
         }
         
-        $logo_dir = $upload_dir['basedir'] . '/qr-logos/';
-        
-
-        $filename = sanitize_file_name(basename(wp_parse_url($url, PHP_URL_PATH)));
-        if (empty($filename)) {
-            $filename = 'logo_' . md5($url) . '.png';
-        }
-        
-        $local_path = $logo_dir . $filename;
-        
-
-        if (!file_exists($logo_dir)) {
-            if (!wp_mkdir_p($logo_dir)) {
-                return '';
-            }
-        }
-        
-
-        if (!file_exists($local_path)) {
-            $response = wp_remote_get(esc_url_raw($url), [
-                'timeout' => 30,
-                'user-agent' => 'WordPress/' . get_bloginfo('version') . '; ' . home_url(),
-                'headers' => [
-                    'Accept' => 'image/*'
-                ]
-            ]);
-            
-            if (is_wp_error($response)) {
-                return '';
-            }
-            
-            $response_code = wp_remote_retrieve_response_code($response);
-            if ($response_code !== 200) {
-                return '';
-            }
-            
-            $body = wp_remote_retrieve_body($response);
-            if (empty($body)) {
-                return '';
-            }
-            
-
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $finfo->buffer($body);
-            $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            
-            if (!in_array($mime_type, $allowed_types, true)) {
-                return '';
-            }
-            
-
-            global $wp_filesystem;
-            if (empty($wp_filesystem)) {
-                require_once ABSPATH . '/wp-admin/includes/file.php';
-                WP_Filesystem();
-            }
-            
-            if (!$wp_filesystem->put_contents($local_path, $body, FS_CHMOD_FILE)) {
-                return '';
-            }
-        }
-        
-        return file_exists($local_path) ? $local_path : '';
+        return $image_info['mime'];
     }
 
     public static function get_logo_path_from_attachment($attachment_id)

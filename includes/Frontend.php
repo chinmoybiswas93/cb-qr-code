@@ -64,8 +64,6 @@ class Frontend
         $logo_path = '';
         if (!empty($logo_id)) {
             $logo_path = QRGenerator::get_logo_path_from_attachment($logo_id);
-        } elseif (!empty($logo_url)) {
-            $logo_path = QRGenerator::download_logo($logo_url);
         }
 
         $qr_data_uri = QRGenerator::generate($qr_url_text, [

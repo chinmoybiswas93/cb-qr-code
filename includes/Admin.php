@@ -106,7 +106,6 @@ class Admin
         }
 
         $tab = sanitize_text_field(wp_unslash($_POST['tab'] ?? ''));
-        $post_data = map_deep(wp_unslash($_POST), 'sanitize_text_field');
 
         if ($tab === 'settings') {
             $input = $this->cbqrcode_sanitize_settings_input($_POST);
@@ -160,7 +159,6 @@ class Admin
             'qr-code-dark',
             'qr-code-light',
             'qr-code-logo-id',
-            'qr-code-logo-url',
             'qr-code-logo-size',
             'qr-code-font-size',
             'qr-code-position',
@@ -183,7 +181,6 @@ class Admin
                         break;
                     case 'qr-code-dark':
                     case 'qr-code-light':
-
                         $input[$clean_key] = preg_replace('/[^a-fA-F0-9]/', '', $value);
                         break;
                     case 'qr-code-size':
@@ -211,7 +208,6 @@ class Admin
             'qr-code-dark',
             'qr-code-light',
             'qr-code-logo-id',
-            'qr-code-logo-url',
             'qr-code-logo-size',
             'qr-code-font-size'
         ];
@@ -223,9 +219,6 @@ class Admin
                 $value = wp_unslash($post_data[$field]);
                 
                 switch ($clean_key) {
-                    case 'qr-code-logo-url':
-                        $input[$clean_key] = esc_url_raw($value);
-                        break;
                     case 'qr-code-logo-id':
                         $input[$clean_key] = absint($value);
                         break;
@@ -359,16 +352,18 @@ class Admin
 
 
         $logo_id = absint($input['qr-code-logo-id'] ?? 0);
-        if ($logo_id > 0 && !wp_attachment_is_image($logo_id)) {
-            $errors[] = esc_html__('Logo must be a valid image attachment.', 'cb-qr-code');
+        if ($logo_id > 0) {
+            if (!wp_attachment_is_image($logo_id)) {
+                $errors[] = esc_html__('Logo must be a valid image attachment.', 'cb-qr-code');
+            } elseif (!QRGenerator::is_supported_image_format($logo_id)) {
+                $format_name = QRGenerator::get_image_format_name($logo_id);
+                $errors[] = sprintf(
+                    /* translators: %s is the unsupported image format */
+                    esc_html__('Logo format "%s" is not supported. Please use JPEG, PNG, GIF, or WebP format.', 'cb-qr-code'),
+                    esc_html($format_name ?: 'unknown')
+                );
+            }
         }
-
-
-        $logo_url = esc_url_raw($input['qr-code-logo-url'] ?? '');
-        if ($logo_id === 0 && !empty($logo_url) && !filter_var($logo_url, FILTER_VALIDATE_URL)) {
-            $errors[] = esc_html__('Logo URL must be a valid URL.', 'cb-qr-code');
-        }
-
 
         $logo_size = absint($input['qr-code-logo-size'] ?? 0);
         if ($logo_size < 10 || $logo_size > 100) {
@@ -428,17 +423,11 @@ class Admin
 
         if ($logo_id > 0) {
             $attachment_url = wp_get_attachment_url($logo_id);
-
             if ($attachment_url && wp_attachment_is_image($logo_id)) {
                 $logo_url = $attachment_url;
             } else {
                 $logo_id = 0;
             }
-        }
-        
-
-        if ($logo_id === 0 && !empty($input['qr-code-logo-url'])) {
-            $logo_url = esc_url_raw($input['qr-code-logo-url']);
         }
         
         return [
@@ -463,13 +452,10 @@ class Admin
             return;
         }
 
-
         if (!current_user_can('manage_options')) {
             wp_send_json_error(['message' => esc_html__('Insufficient permissions.', 'cb-qr-code')]);
             return;
         }
-        
-
 
         $input = $this->cbqrcode_sanitize_preview_input($_POST);
         
@@ -488,7 +474,6 @@ class Admin
         $dark = preg_replace('/[^a-fA-F0-9]/', '', $input['qr-code-dark'] ?? '000000');
         $light = preg_replace('/[^a-fA-F0-9]/', '', $input['qr-code-light'] ?? 'ffffff');
         $logo_id = absint($input['qr-code-logo-id'] ?? 0);
-        $logo_url = esc_url_raw($input['qr-code-logo-url'] ?? '');
         $logo_size = max(10, min(100, absint($input['qr-code-logo-size'] ?? 50)));
         $font_size = max(6, min(100, absint($input['qr-code-font-size'] ?? 12)));
         
@@ -499,8 +484,6 @@ class Admin
         $logo_path = '';
         if (!empty($logo_id)) {
             $logo_path = QRGenerator::get_logo_path_from_attachment($logo_id);
-        } elseif (!empty($logo_url)) {
-            $logo_path = QRGenerator::download_logo($logo_url);
         }
         
         $qr_data_uri = QRGenerator::generate(esc_url($qr_url_text), [
