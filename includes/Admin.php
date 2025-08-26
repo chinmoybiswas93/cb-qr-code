@@ -26,14 +26,14 @@ class Admin
             'CB QR Code Settings',
             'CB QR Code',
             'manage_options',
-            'cb-qr-code',
+            'cbqrcode_admin',
             [$this, 'cbqrcode_settings_page'],
             'dashicons-admin-generic',
             100
         );
     }
     public function cbqrcode_enqueue_admin_assets($hook) {
-        if ($hook !== 'toplevel_page_cb-qr-code') {
+        if ($hook !== 'toplevel_page_cbqrcode_admin') {
             return;
         }
         
@@ -108,137 +108,117 @@ class Admin
         $tab = sanitize_text_field(wp_unslash($_POST['tab'] ?? ''));
 
         if ($tab === 'settings') {
-            $input = $this->cbqrcode_sanitize_settings_input($_POST);
+            // Only extract the required fields for settings
+            $required_data = [];
+            $expected_fields = ['cbqrcode-url-mode', 'cbqrcode-custom-url', 'cbqrcode-post-types'];
+            
+            foreach ($expected_fields as $field) {
+                if (isset($_POST[$field])) {
+                    $required_data[$field] = wp_unslash($_POST[$field]);
+                }
+            }
+            
+            $input = $this->cbqrcode_sanitize_settings_input($required_data);
             $this->cbqrcode_handle_settings_tab($input);
         } else {
-            $input = $this->cbqrcode_sanitize_appearance_input($_POST);
+            // Only extract the required fields for appearance
+            $required_data = [];
+            $appearance_fields = [
+                'qr-code-label', 'qr-code-size', 'qr-code-margin', 'qr-code-dark', 
+                'qr-code-light', 'qr-code-logo-id', 'qr-code-logo-size', 
+                'qr-code-font-size', 'qr-code-position'
+            ];
+            
+            foreach ($appearance_fields as $field) {
+                if (isset($_POST[$field])) {
+                    $required_data[$field] = wp_unslash($_POST[$field]);
+                }
+            }
+            
+            $input = $this->cbqrcode_sanitize_appearance_input($required_data);
             $this->cbqrcode_handle_appearance_tab($input);
         }
     }
 
-    private function cbqrcode_sanitize_settings_input($post_data)
+    private function cbqrcode_sanitize_settings_input($required_data)
     {
-
-        $expected_fields = [
-            'cbqrcode-url-mode',
-            'cbqrcode-custom-url',
-            'cbqrcode-post-types',
-            'action',
-            'tab'
-        ];
-
         $input = array();
-        foreach ($expected_fields as $field) {
-            if (isset($post_data[$field])) {
-                $clean_key = sanitize_key($field);
-                $value = wp_unslash($post_data[$field]);
-                
-                if (is_array($value)) {
-                    $input[$clean_key] = array_map('sanitize_text_field', $value);
-                } else {
-                    switch ($clean_key) {
-                        case 'cbqrcode-custom-url':
-                            $input[$clean_key] = esc_url_raw($value);
-                            break;
-                        default:
-                            $input[$clean_key] = sanitize_text_field($value);
-                            break;
-                    }
-                }
-            }
+        
+        // Process URL mode
+        if (isset($required_data['cbqrcode-url-mode'])) {
+            $input['cbqrcode-url-mode'] = sanitize_text_field($required_data['cbqrcode-url-mode']);
         }
+        
+        // Process custom URL
+        if (isset($required_data['cbqrcode-custom-url'])) {
+            $input['cbqrcode-custom-url'] = esc_url_raw($required_data['cbqrcode-custom-url']);
+        }
+        
+        // Process post types
+        if (isset($required_data['cbqrcode-post-types']) && is_array($required_data['cbqrcode-post-types'])) {
+            $input['cbqrcode-post-types'] = array_map('sanitize_text_field', $required_data['cbqrcode-post-types']);
+        }
+        
         return $input;
     }
 
-    private function cbqrcode_sanitize_appearance_input($post_data)
+    private function cbqrcode_sanitize_appearance_input($required_data)
     {
-        $appearance_fields = [
-            'qr-code-label',
-            'qr-code-size',
-            'qr-code-margin',
-            'qr-code-dark',
-            'qr-code-light',
-            'qr-code-logo-id',
-            'qr-code-logo-size',
-            'qr-code-font-size',
-            'qr-code-position',
-            'action',
-            'tab'
-        ];
-
         $input = array();
-        foreach ($appearance_fields as $field) {
-            if (isset($post_data[$field])) {
-                $clean_key = sanitize_key($field);
-                $value = wp_unslash($post_data[$field]);
-                
-                switch ($clean_key) {
-                    case 'qr-code-logo-url':
-                        $input[$clean_key] = esc_url_raw($value);
-                        break;
-                    case 'qr-code-logo-id':
-                        $input[$clean_key] = absint($value);
-                        break;
-                    case 'qr-code-dark':
-                    case 'qr-code-light':
-                        $input[$clean_key] = preg_replace('/[^a-fA-F0-9]/', '', $value);
-                        break;
-                    case 'qr-code-size':
-                    case 'qr-code-margin':
-                    case 'qr-code-logo-size':
-                    case 'qr-code-font-size':
-                        $input[$clean_key] = absint($value);
-                        break;
-                    default:
-                        $input[$clean_key] = sanitize_text_field($value);
-                        break;
-                }
+        
+        foreach ($required_data as $field => $value) {
+            $clean_key = sanitize_key($field);
+            
+            switch ($clean_key) {
+                case 'qr-code-logo-id':
+                    $input[$clean_key] = absint($value);
+                    break;
+                case 'qr-code-dark':
+                case 'qr-code-light':
+                    $input[$clean_key] = preg_replace('/[^a-fA-F0-9]/', '', $value);
+                    break;
+                case 'qr-code-size':
+                case 'qr-code-margin':
+                case 'qr-code-logo-size':
+                case 'qr-code-font-size':
+                    $input[$clean_key] = absint($value);
+                    break;
+                default:
+                    $input[$clean_key] = sanitize_text_field($value);
+                    break;
             }
         }
+        
         return $input;
     }
 
-    private function cbqrcode_sanitize_preview_input($post_data)
+    private function cbqrcode_sanitize_preview_input($required_data)
     {
-
-        $preview_fields = [
-            'qr-code-label',
-            'qr-code-size',
-            'qr-code-margin',
-            'qr-code-dark',
-            'qr-code-light',
-            'qr-code-logo-id',
-            'qr-code-logo-size',
-            'qr-code-font-size'
-        ];
-
         $input = array();
-        foreach ($preview_fields as $field) {
-            if (isset($post_data[$field])) {
-                $clean_key = sanitize_key($field);
-                $value = wp_unslash($post_data[$field]);
-                
-                switch ($clean_key) {
-                    case 'qr-code-logo-id':
-                        $input[$clean_key] = absint($value);
-                        break;
-                    case 'qr-code-dark':
-                    case 'qr-code-light':
-
-                        $input[$clean_key] = preg_replace('/[^a-fA-F0-9]/', '', $value);
-                        break;
-                    case 'qr-code-size':
-                    case 'qr-code-margin':
-                    case 'qr-code-logo-size':
-                    case 'qr-code-font-size':
-                        $input[$clean_key] = absint($value);
-                        break;
-                    default:
-                        $input[$clean_key] = sanitize_text_field($value);
-                        break;
-                }
+        
+        foreach ($required_data as $field => $value) {
+            $clean_key = sanitize_key($field);
+            
+            switch ($clean_key) {
+                case 'qr-code-logo-id':
+                    $input[$clean_key] = absint($value);
+                    break;
+                case 'qr-code-dark':
+                case 'qr-code-light':
+                    $input[$clean_key] = preg_replace('/[^a-fA-F0-9]/', '', $value);
+                    break;
+                case 'qr-code-size':
+                case 'qr-code-margin':
+                case 'qr-code-logo-size':
+                case 'qr-code-font-size':
+                    $input[$clean_key] = absint($value);
+                    break;
+                default:
+                    $input[$clean_key] = sanitize_text_field($value);
+                    break;
             }
         }
+        
         return $input;
     }
 
@@ -457,7 +437,20 @@ class Admin
             return;
         }
 
-        $input = $this->cbqrcode_sanitize_preview_input($_POST);
+        // Only extract the required fields for preview
+        $required_data = [];
+        $preview_fields = [
+            'qr-code-label', 'qr-code-size', 'qr-code-margin', 'qr-code-dark',
+            'qr-code-light', 'qr-code-logo-id', 'qr-code-logo-size', 'qr-code-font-size'
+        ];
+        
+        foreach ($preview_fields as $field) {
+            if (isset($_POST[$field])) {
+                $required_data[$field] = wp_unslash($_POST[$field]);
+            }
+        }
+
+        $input = $this->cbqrcode_sanitize_preview_input($required_data);
         
         $current_settings = get_option('cbqrcode_settings', []);
         $url_mode = $current_settings['cbqrcode-url-mode'] ?? 'permalink';
