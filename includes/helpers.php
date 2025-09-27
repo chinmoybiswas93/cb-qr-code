@@ -32,6 +32,30 @@ function cbqrcode_validate_fields($field_names, $sanitized_data) {
         $config = $definitions[$field_name];
         $value = $sanitized_data[$field_name] ?? '';
         
+        $dependency_failed = false;
+        if (!empty($config['depends_on']) && is_array($config['depends_on'])) {
+            foreach ($config['depends_on'] as $depend_field => $depend_value) {
+                $depend_field_value = $sanitized_data[$depend_field] ?? '';
+                
+                if ($depend_field_value === $depend_value && empty($value)) {
+                    $field_display_name = $field_name === 'cbqrcode-custom-url' ? 'URL' : ucfirst(str_replace(['-', '_'], ' ', $field_name));
+                    
+                    $error_message = sprintf(
+                        /* translators: %s is the field name */
+                        esc_html__('%s is required when using custom URL mode.', 'cb-qr-code'),
+                        esc_html($field_display_name)
+                    );
+                    $errors[] = $error_message;
+                    $dependency_failed = true;
+                    break;
+                }
+            }
+        }
+        
+        if ($dependency_failed) {
+            continue;
+        }
+        
         if (!empty($config['required']) && empty($value)) {
             $errors[] = sprintf(
                 /* translators: %s is the field name */
@@ -81,10 +105,7 @@ function cbqrcode_validate_fields($field_names, $sanitized_data) {
                 
             case 'hex_color':
                 if (!empty($value)) {
-                    // Remove # prefix if present for validation
                     $clean_hex = ltrim($value, '#');
-                    
-                    // Check if it's valid hex (3 or 6 characters, only 0-9, a-f, A-F)
                     if (!preg_match('/^[a-fA-F0-9]{3}$|^[a-fA-F0-9]{6}$/', $clean_hex)) {
                         $errors[] = sprintf(
                             /* translators: %s is the field name */
@@ -96,18 +117,6 @@ function cbqrcode_validate_fields($field_names, $sanitized_data) {
                 break;
         }
         
-        if (!empty($config['depends_on']) && is_array($config['depends_on'])) {
-            foreach ($config['depends_on'] as $depend_field => $depend_value) {
-                if (($sanitized_data[$depend_field] ?? '') === $depend_value && empty($value)) {
-                    $errors[] = sprintf(
-                        /* translators: %s is the field name */
-                        esc_html__('%s is required when using custom URL mode.', 'cb-qr-code'),
-                        esc_html(str_replace(['-', '_'], ' ', $field_name))
-                    );
-                }
-            }
-        }
-        
         if ($field_name === 'cbqrcode-custom-url' && !empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
             $errors[] = esc_html__('Please enter a valid URL.', 'cb-qr-code');
         }
@@ -115,5 +124,3 @@ function cbqrcode_validate_fields($field_names, $sanitized_data) {
     
     return $errors;
 }
-
-

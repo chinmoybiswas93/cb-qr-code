@@ -111,7 +111,7 @@ class Admin
         if ($tab === 'settings') {
             $sanitized_input = [
                 'cbqrcode-url-mode' => sanitize_text_field(wp_unslash($_POST['cbqrcode-url-mode'] ?? '')),
-                'cbqrcode-custom-url' => sanitize_url(wp_unslash($_POST['cbqrcode-custom-url'] ?? '')),
+                'cbqrcode-custom-url' => sanitize_text_field(wp_unslash($_POST['cbqrcode-custom-url'] ?? '')),
                 'cbqrcode-post-types' => isset($_POST['cbqrcode-post-types']) && is_array($_POST['cbqrcode-post-types'])
                     ? array_map('sanitize_text_field', wp_unslash($_POST['cbqrcode-post-types']))
                     : []
