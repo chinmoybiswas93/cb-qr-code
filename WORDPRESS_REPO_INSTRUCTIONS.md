@@ -31,22 +31,32 @@
 
 ### 1. **Create Submission ZIP**
 ```bash
-# Create clean directory without .git
-cp -r cb-qr-code cb-qr-code-submission
-cd cb-qr-code-submission
-rm -rf .git* .DS_Store
+# Navigate to plugin parent directory
+cd /path/to/wp-content/plugins
+
+# Create clean copy of the plugin
+cp -r cb-qr-code cb-qr-code-clean
+cd cb-qr-code-clean
+
+# Remove development files
+rm -rf .git* .DS_Store *.md
+rm -rf DEVELOPMENT_INSTRUCTIONS.md ISSUES.md WORDPRESS_REPO_INSTRUCTIONS.md
 
 # Verify vendor directory is clean
 du -sh vendor  # Should be ~800KB
 
-# Create submission ZIP
+# Create submission ZIP with version number
 cd ..
-zip -r cb-qr-code-1.0.3.zip cb-qr-code-submission -x "*.git*" "*.DS_Store"
+zip -r cb-qr-code-1.0.3.zip cb-qr-code-clean -x "*.git*" "*.DS_Store"
+
+# Rename for WordPress.org submission
+mv cb-qr-code-clean cb-qr-code
+zip -r cb-qr-code-1.0.3.zip cb-qr-code -x "*.git*" "*.DS_Store"
 ```
 
 ### 2. **WordPress.org Plugin Directory**
 1. Go to https://wordpress.org/plugins/developers/add/
-2. Upload `cb-qr-code-1.0.3.zip`
+2. Upload `cb-qr-code-1.0.3.zip` (main folder must be named `cb-qr-code`)
 3. Fill out plugin information:
    - **Plugin Name**: CB QR Code
    - **Description**: A simple QR code plugin which shows a QR Code in pages for sharing the links easily
@@ -65,7 +75,15 @@ Create these files in the plugin directory for WordPress.org:
 - `screenshot-2.png` - Frontend QR code display
 - `screenshot-3.png` - QR code customization options
 
-### 4. **README.txt Requirements**
+### 4. **WordPress.org Requirements**
+
+#### Folder Structure
+- ✅ Main plugin folder named: `cb-qr-code`
+- ✅ ZIP file named: `cb-qr-code-{version}.zip` (e.g., `cb-qr-code-1.0.3.zip`)
+- ✅ Main plugin file: `cb-qr-code/cb-qr-code.php`
+- ✅ README file: `cb-qr-code/README.txt`
+
+#### README.txt Requirements
 Ensure README.txt includes:
 - [x] Plugin description
 - [x] Installation instructions  
