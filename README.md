@@ -4,7 +4,7 @@
 **Tags:** qr code, sharing, shortcode, post, page  
 **Requires at least:** 6.0  
 **Tested up to:** 6.8
-**Stable tag:** 1.0.2  
+**Stable tag:** 1.0.3
 **License:** GPL-2.0+  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -64,6 +64,17 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 
 ## Changelog
 
+### 1.0.3
+* **SECURITY:** Implemented FluentSecurity early sanitization pattern for WordPress.org compliance
+* **SECURITY:** Enhanced input validation with proper wp_unslash() usage
+* **SECURITY:** Individual field processing (no bulk $_POST processing)
+* **IMPROVED:** Enhanced custom URL dependency validation with user-friendly error messages
+* **IMPROVED:** Hex color validation and processing for QR code customization
+* **FIXED:** Custom URL field validation now properly shows required field error
+* **OPTIMIZED:** Code cleanup removing non-essential comments
+* **OPTIMIZED:** Helper function cleanup and redundant code removal
+* **COMPLIANT:** Full WordPress.org security standards implementation
+
 ### 1.0.2
 * **NEW:** Local QR code generation using endroid/qr-code library (WordPress.org compliant)
 * **NEW:** Persistent admin tabs - remembers last active tab after page reload
@@ -90,6 +101,9 @@ See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html) for details.
 ---
 
 ## Upgrade Notice
+
+### 1.0.3
+Major security update implementing FluentSecurity early sanitization pattern, enhanced validation logic, and WordPress.org compliance. Recommended update for all users.
 
 ### 1.0.2
 Major update with local QR generation, persistent admin tabs, and improved performance. No external dependencies required.

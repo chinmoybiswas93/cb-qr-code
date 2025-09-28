@@ -92,8 +92,8 @@ function cbqrcode_validate_fields($field_names, $sanitized_data) {
                 if (!empty($value)) {
                     if (!wp_attachment_is_image($value)) {
                         $errors[] = esc_html__('Logo must be a valid image attachment.', 'cb-qr-code');
-                    } elseif (!QRGenerator::is_supported_image_format($value)) {
-                        $format_name = QRGenerator::get_image_format_name($value);
+                    } elseif (!\ChinmoyBiswas\CBQRCode\QRGenerator::is_supported_image_format($value)) {
+                        $format_name = \ChinmoyBiswas\CBQRCode\QRGenerator::get_image_format_name($value);
                         $errors[] = sprintf(
                             /* translators: %s is the unsupported image format */
                             esc_html__('Logo format "%s" is not supported. Please use JPEG, PNG, GIF, or WebP format.', 'cb-qr-code'),

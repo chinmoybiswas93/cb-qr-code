@@ -2,7 +2,7 @@
 
 ## Plugin Overview
 
-**Version**: 1.0.2  
+**Version**: 1.0.3
 **Description**: WordPress plugin that generates and displays QR codes on posts and pages with customizable appearance and security-compliant architecture.
 
 ### Key Features

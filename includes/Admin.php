@@ -249,16 +249,16 @@ class Admin
         $logo_size = $input['qr-code-logo-size'] ?? 50;
         $font_size = $input['qr-code-font-size'] ?? 12;
 
-        $foreground = QRGenerator::hex_to_rgb($dark);
-        $background = QRGenerator::hex_to_rgb($light);
+        $foreground = \ChinmoyBiswas\CBQRCode\QRGenerator::hex_to_rgb($dark);
+        $background = \ChinmoyBiswas\CBQRCode\QRGenerator::hex_to_rgb($light);
 
 
         $logo_path = '';
         if (!empty($logo_id)) {
-            $logo_path = QRGenerator::get_logo_path_from_attachment($logo_id);
+            $logo_path = \ChinmoyBiswas\CBQRCode\QRGenerator::get_logo_path_from_attachment($logo_id);
         }
 
-        $qr_data_uri = QRGenerator::generate(esc_url($qr_url_text), [
+        $qr_data_uri = \ChinmoyBiswas\CBQRCode\QRGenerator::generate(esc_url($qr_url_text), [
             'size' => $size,
             'margin' => $margin,
             'foreground' => $foreground,
