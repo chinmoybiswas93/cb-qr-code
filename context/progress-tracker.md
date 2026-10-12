@@ -32,7 +32,7 @@ one branch = one PR. Status: `todo` → `in progress` → `in review` → `done`
 
 | # | Feature | Summary | Tier | Depends on | Status |
 |---|---|---|---|---|---|
-| 0 | [Restructure](specs/0-restructure.md) | Docs PR → PR 0 (PHP floor 8.1, issue #12) → A kernel → B handlers → C compat; each gated by snapshot diffs + browser pass | Foundation | — | todo |
+| 0 | [Restructure](specs/0-restructure.md) | Docs PR → PR 0 (PHP floor 8.1, issue #12) → A kernel → B handlers → C compat; each gated by snapshot diffs + browser pass | Foundation | — | in progress — docs [#1](https://github.com/chinmoybiswas93/cb-qr-code/pull/1), PR 0 [#2](https://github.com/chinmoybiswas93/cb-qr-code/pull/2) merged; PR A in review |
 | 1 | [Shortcode](specs/1-shortcode.md) | `[cbqrcode]` with attribute overrides; extract a shared renderer + one defaults source | Must | — | todo |
 | 2 | [Gutenberg block](specs/2-gutenberg-block.md) | Dynamic block, no build step, ServerSideRender preview | Must | 1 | todo |
 | 3 | [PNG download](specs/3-download-button.md) | Optional download button, slug-based filename | Must | 1 | todo |

@@ -37,12 +37,6 @@ if (file_exists(CBQRCODE_PLUGIN_PATH . 'vendor/autoload.php')) {
     return;
 }
 
-function cbqrcode_init_plugin()
-{
-    if (is_admin()) {
-        ChinmoyBiswas\CBQRCode\Admin::get_instance();
-    } else {
-        ChinmoyBiswas\CBQRCode\Frontend::get_instance();
-    }
-}
-add_action('plugins_loaded', 'cbqrcode_init_plugin');
+// Everything else is registered from app/Hooks/actions.php.
+$cbqrcode_boot = require CBQRCODE_PLUGIN_PATH . 'boot/app.php';
+$cbqrcode_boot(__FILE__);

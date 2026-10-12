@@ -13,7 +13,7 @@ Everything lives under `app/public/wp-content/plugins/cb-qr-code/`. Text domain 
 |---|---|
 | PHP floor | **8.1** — set by `endroid/qr-code` 4.8.5 (`^8.1`), whose Composer platform check refuses to load below it (issue #12). Header and readme both say `Requires PHP: 8.1` |
 | PHP syntax | **7.4-compatible anyway** — no enums, readonly, constructor promotion, `match`, nullsafe `?->`, named args, union types. Keeps a later endroid downgrade possible |
-| Autoload | Composer PSR-4 `ChinmoyBiswas\CBQRCode\` → `includes/`, plus `files: includes/helpers.php` |
+| Autoload | Composer PSR-4: `ChinmoyBiswas\CBQRCode\App\` → `app/`, `…\Framework\` → `framework/`, `ChinmoyBiswas\CBQRCode\` → `includes/` (until spec 0 PR C); plus `files: includes/helpers.php`. After moving a class: `composer dump-autoload -o --no-dev`, then `git add -f vendor/composer/` |
 | Runtime deps | `endroid/qr-code` 4.8.5 → `bacon/bacon-qr-code` 2.0.8, `dasprid/enum` 1.0.6. `PngWriter` needs **GD** |
 | JS / CSS | Hand-written jQuery in `assets/js/`, plain CSS in `assets/css/`. No npm, no bundler |
 
@@ -26,8 +26,21 @@ task, and then `composer install --no-dev` and diff `vendor/` before committing.
 
 ```
 cb-qr-code.php        Header, CBQRCODE_PLUGIN_{PATH,URL,VERSION}, vendor/autoload.php,
-                      plugins_loaded → is_admin() ? Admin : Frontend
-includes/
+                      then boot/app.php
+boot/app.php          Returns the boot closure → new Framework\Application( __FILE__ )
+config/app.php        Plain array via App::config()->get('app.…'): option names, AJAX
+                      actions, nonce, admin page slug — all contracts
+framework/            ChinmoyBiswas\CBQRCode\Framework\ — the slim kernel
+  Application.php     Paths/URLs, loads config/, binds `view`, sets the App facade,
+                      requires app/Hooks/actions.php
+  Container.php       bind/singleton/instance/alias/make — no auto-wiring
+  Config.php          Dot-notation access over config/*.php
+  View.php            app/Views renderer (dot or slash names), realpath-guarded
+app/                  ChinmoyBiswas\CBQRCode\App\
+  App.php             Static facade: make/singleton/config/view/path/url
+  Hooks/actions.php   THE registration manifest: cbqrcode_init_plugin() on plugins_loaded
+                      → is_admin() ? Admin : Frontend (unchanged from 1.0.0)
+includes/             (moves to app/ in spec 0 PR B, removed in PR C)
   Admin.php           Menu page (manage_options), asset enqueue, 2 AJAX handlers
   Frontend.php        the_content filter → appends the QR block; enqueues style.css + script.js
   QRGenerator.php     Static: generate() → PNG data URI, hex_to_rgb(), logo/attachment checks
@@ -36,6 +49,8 @@ templates/            Admin tab partials included by Admin::cbqrcode_settings_pa
                       (nav.php is unused — Admin renders the tab buttons itself)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)
 languages/            cb-qr-code.pot
+tests/                Snapshot/compare/browser harness — see tests/README.md. Not shipped
+.distignore           What stays out of the WordPress.org zip
 ```
 
 AJAX requests run with `is_admin()` true, so `Admin` owns them; `Frontend` never loads in

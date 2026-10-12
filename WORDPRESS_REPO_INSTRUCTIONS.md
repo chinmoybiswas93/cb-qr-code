@@ -30,29 +30,25 @@
 ## WordPress.org Submission Process
 
 ### 1. **Create Submission ZIP**
+
+`.distignore` lists everything that stays out of the zip (git files, `*.md` dev docs, `context/`,
+`.claude/`, `tests/`). Build the zip from a copy in a temp folder — **never** unzip or install it
+over this git working tree, WordPress deletes the plugin folder before unpacking.
+
 ```bash
-# Navigate to plugin parent directory
-cd /path/to/wp-content/plugins
-
-# Create clean copy of the plugin
-cp -r cb-qr-code cb-qr-code-clean
-cd cb-qr-code-clean
-
-# Remove development files
-rm -rf .git* .DS_Store *.md
-rm -rf DEVELOPMENT_INSTRUCTIONS.md ISSUES.md WORDPRESS_REPO_INSTRUCTIONS.md
-rm -rf context .claude   # agent rules and context (agent.md, CLAUDE.md go with *.md above)
+# From the plugin directory
+VERSION=1.0.0
+BUILD="$(mktemp -d)"
+rsync -a --exclude-from=.distignore ./ "$BUILD/cb-qr-code/"
 
 # Verify vendor directory is clean
-du -sh vendor  # Should be ~800KB
+du -sh "$BUILD/cb-qr-code/vendor"  # Should be ~800KB
 
-# Create submission ZIP with version number
-cd ..
-zip -r cb-qr-code-1.0.0.zip cb-qr-code-clean -x "*.git*" "*.DS_Store"
-
-# Rename for WordPress.org submission
-mv cb-qr-code-clean cb-qr-code
-zip -r cb-qr-code-1.0.0.zip cb-qr-code -x "*.git*" "*.DS_Store"
+# Create submission ZIP with version number (top-level folder must be cb-qr-code)
+(cd "$BUILD" && zip -rq "cb-qr-code-$VERSION.zip" cb-qr-code)
+mv "$BUILD/cb-qr-code-$VERSION.zip" ../
+unzip -l "../cb-qr-code-$VERSION.zip" | less   # no tests/, context/ or *.md except readme.txt
+rm -rf "$BUILD"
 ```
 
 ### 2. **WordPress.org Plugin Directory**

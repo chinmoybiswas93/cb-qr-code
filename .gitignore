@@ -38,3 +38,6 @@ node_modules/
 # Build files
 dist/
 build/
+# Test snapshots (site-specific output of tests/snapshot.sh) and playwright-cli logs
+tests/snapshots/
+.playwright-cli/

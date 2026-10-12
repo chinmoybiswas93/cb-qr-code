@@ -8,6 +8,8 @@
     },
     "autoload": {
         "psr-4": {
+            "ChinmoyBiswas\\CBQRCode\\App\\": "app/",
+            "ChinmoyBiswas\\CBQRCode\\Framework\\": "framework/",
             "ChinmoyBiswas\\CBQRCode\\": "includes/"
         },
         "files": [

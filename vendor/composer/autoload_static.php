@@ -21,6 +21,8 @@ class ComposerStaticInita547c1b70977c93ef30260a7e594b837
         ),
         'C' =>
         array (
+            'ChinmoyBiswas\\CBQRCode\\Framework\\' => 33,
+            'ChinmoyBiswas\\CBQRCode\\App\\' => 27,
             'ChinmoyBiswas\\CBQRCode\\' => 23,
         ),
         'B' =>
@@ -37,6 +39,14 @@ class ComposerStaticInita547c1b70977c93ef30260a7e594b837
         'DASPRiD\\Enum\\' =>
         array (
             0 => __DIR__ . '/..' . '/dasprid/enum/src',
+        ),
+        'ChinmoyBiswas\\CBQRCode\\Framework\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/framework',
+        ),
+        'ChinmoyBiswas\\CBQRCode\\App\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/app',
         ),
         'ChinmoyBiswas\\CBQRCode\\' =>
         array (
@@ -110,6 +120,11 @@ class ComposerStaticInita547c1b70977c93ef30260a7e594b837
         'BaconQrCode\\Renderer\\RendererStyle\\RendererStyle' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Renderer/RendererStyle/RendererStyle.php',
         'BaconQrCode\\Writer' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Writer.php',
         'ChinmoyBiswas\\CBQRCode\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
+        'ChinmoyBiswas\\CBQRCode\\App\\App' => __DIR__ . '/../..' . '/app/App.php',
+        'ChinmoyBiswas\\CBQRCode\\Framework\\Application' => __DIR__ . '/../..' . '/framework/Application.php',
+        'ChinmoyBiswas\\CBQRCode\\Framework\\Config' => __DIR__ . '/../..' . '/framework/Config.php',
+        'ChinmoyBiswas\\CBQRCode\\Framework\\Container' => __DIR__ . '/../..' . '/framework/Container.php',
+        'ChinmoyBiswas\\CBQRCode\\Framework\\View' => __DIR__ . '/../..' . '/framework/View.php',
         'ChinmoyBiswas\\CBQRCode\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend.php',
         'ChinmoyBiswas\\CBQRCode\\QRGenerator' => __DIR__ . '/../..' . '/includes/QRGenerator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
