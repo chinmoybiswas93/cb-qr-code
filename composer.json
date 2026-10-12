@@ -3,7 +3,7 @@
     "description": "WordPress QR Code Plugin with local generation",
     "type": "wordpress-plugin",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "endroid/qr-code": "^4.0"
     },
     "autoload": {
@@ -16,7 +16,7 @@
     },
     "config": {
         "platform": {
-            "php": ">=7.4"
+            "php": "8.1"
         },
         "optimize-autoloader": true
     },

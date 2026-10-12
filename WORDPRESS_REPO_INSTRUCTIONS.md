@@ -64,7 +64,7 @@ zip -r cb-qr-code-1.0.0.zip cb-qr-code -x "*.git*" "*.DS_Store"
    - **Tags**: qr-code, qr, share, social-sharing, mobile
    - **Tested up to**: 6.4
    - **Requires at least**: 5.0
-   - **Requires PHP**: 7.4
+   - **Requires PHP**: 8.1
 
 ### 3. **Plugin Assets (for WordPress.org)**
 Create these files in the plugin directory for WordPress.org:

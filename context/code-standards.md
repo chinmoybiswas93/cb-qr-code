@@ -17,7 +17,7 @@ Templates have no namespace but keep the `ABSPATH` guard and import helpers with
 
 Existing style: 4-space indent, short array syntax `[]`, braces on their own line for classes and
 methods, public methods prefixed `cbqrcode_`. Match it in the code you touch; don't reformat the
-rest. PHP 7.4 syntax only.
+rest. PHP 7.4 syntax only, even though the runtime floor is 8.1 (see `agent.md` → Stack).
 
 ## The input pattern
 

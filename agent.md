@@ -1,7 +1,7 @@
 # Agent Instructions — CB QR Code
 
 You are working inside the **cb-qr-code** WordPress plugin: it appends a locally generated QR code
-to singular posts/pages. Small, flat, no build step — PHP 7.4+, jQuery, plain CSS.
+to singular posts/pages. Small, flat, no build step — PHP 8.1+ (written in 7.4-compatible syntax), jQuery, plain CSS.
 
 Everything lives under `app/public/wp-content/plugins/cb-qr-code/`. Text domain and slug are
 `cb-qr-code`; the function/option/hook prefix is `cbqrcode_`.
@@ -11,7 +11,8 @@ Everything lives under `app/public/wp-content/plugins/cb-qr-code/`. Text domain 
 
 | | |
 |---|---|
-| PHP floor | **7.4** — no enums, readonly, constructor promotion, `match`, nullsafe `?->`, named args, union types |
+| PHP floor | **8.1** — set by `endroid/qr-code` 4.8.5 (`^8.1`), whose Composer platform check refuses to load below it (issue #12). Header and readme both say `Requires PHP: 8.1` |
+| PHP syntax | **7.4-compatible anyway** — no enums, readonly, constructor promotion, `match`, nullsafe `?->`, named args, union types. Keeps a later endroid downgrade possible |
 | Autoload | Composer PSR-4 `ChinmoyBiswas\CBQRCode\` → `includes/`, plus `files: includes/helpers.php` |
 | Runtime deps | `endroid/qr-code` 4.8.5 → `bacon/bacon-qr-code` 2.0.8, `dasprid/enum` 1.0.6. `PngWriter` needs **GD** |
 | JS / CSS | Hand-written jQuery in `assets/js/`, plain CSS in `assets/css/`. No npm, no bundler |
@@ -82,7 +83,7 @@ is started from `app/public`** — a session started inside this plugin folder d
 | Skill | When |
 |---|---|
 | `wordpress-pro` | WordPress **API** questions: sanitize/escape choice, nonces, capabilities, hooks, i18n. This plugin *is* conventional (`add_menu_page`, `admin-ajax`, `wp_enqueue_*`), so its patterns mostly apply. Skip its theme/Gutenberg/WooCommerce references |
-| `php-pro` | PHP **language** only, capped at 7.4. Ignore its Laravel/Symfony/PHPStan/PHPUnit advice |
+| `php-pro` | PHP **language** only, 7.4-compatible syntax (runtime floor 8.1). Ignore its Laravel/Symfony/PHPStan/PHPUnit advice |
 | `wp-plugin-directory-guidelines` | `readme.txt`, plugin header, GPL, anything WordPress.org reviews |
 | `owasp-security-review` | Auditing a whole file or subsystem |
 | `/security-review` (built-in) | The pending diff — before calling a security-relevant change done |
@@ -109,12 +110,18 @@ is started from `app/public`** — a session started inside this plugin folder d
 Run what the change earns and say what you ran:
 
 ```bash
-# Syntax at the PHP floor — Herd's `php` on PATH is 8.4 and will not catch 7.4 breaks
+# Local has no PHP 8.1, so the floor is linted with 8.2 (lowest available) over everything,
+# vendor/ included — and our own code with 7.4, which keeps it 7.4-compatible in syntax.
+# Herd's `php` on PATH is 8.4; don't use it for either.
 P74="$HOME/Library/Application Support/Local/lightning-services/php-7.4.30+6/bin/darwin-arm64/bin/php"
-for f in cb-qr-code.php includes/*.php templates/*.php; do "$P74" -l "$f"; done
+P82="$HOME/Library/Application Support/Local/lightning-services/php-8.2.27+1/bin/darwin-arm64/bin/php"
+find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 "$P82" -l | grep -v '^No syntax errors'
+find . -name '*.php' -not -path './vendor/*' -not -path './.git/*' -print0 | xargs -0 -n1 "$P74" -l | grep -v '^No syntax errors'
+
+# Composer metadata is consistent (lock matches composer.json)
+composer validate --no-check-publish
 
 # Plugin Check's own PHPCS ruleset (phpcs is not on PATH; Plugin Check ships one)
-P82="$HOME/Library/Application Support/Local/lightning-services/php-8.2.27+1/bin/darwin-arm64/bin/php"
 "$P82" ../plugin-check/vendor/squizlabs/php_codesniffer/bin/phpcs \
   --standard=../plugin-check/phpcs-rulesets/plugin-review.xml \
   --extensions=php --ignore='*/vendor/*' -s .

@@ -4,7 +4,7 @@
 **Tags:** qr code, sharing, shortcode, post, page  
 **Requires at least:** 6.0  
 **Tested up to:** 6.8  
-**Requires PHP:** 7.4  
+**Requires PHP:** 8.1  
 **Stable tag:** 1.0.0
 **License:** GPL-2.0+  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
