@@ -15,7 +15,7 @@
 - Real-time preview functionality
 
 ### Technical Requirements
-- PHP: >= 7.4
+- PHP: >= 8.1
 - WordPress: >= 5.0
 - Composer dependencies
 - Image formats: JPEG, PNG, GIF, WebP

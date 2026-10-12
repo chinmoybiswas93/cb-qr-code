@@ -20,7 +20,7 @@ Research done 2026-10-13:
 ## Every spec follows the plugin's rules
 
 `agent.md` hard rules apply to all of them, and each spec only notes where they bite:
-- PHP 7.4, no new Composer packages, no npm or build step. Blocks use plain `wp.*` JS.
+- PHP 8.1 floor with 7.4-compatible syntax, no new Composer packages, no npm or build step. Blocks use plain `wp.*` JS.
 - Local generation only. No remote QR API, ever.
 - Every write path does nonce, then capability, then sanitizing each field, then validation, then
   the action.
@@ -30,7 +30,7 @@ Research done 2026-10-13:
 
 ## Standard test steps for every PR
 
-1. PHP 7.4 lint and the Plugin Check PHPCS ruleset (commands in `agent.md` → *Verify*). Both must be
+1. PHP lint (8.2 everything, 7.4 own code) and the Plugin Check PHPCS ruleset (commands in `agent.md` → *Verify*). Both must be
    clean.
 2. Activate **cb-qr-code** on `https://cb-test.local`, never alongside `cb-qr-code-org`, and run
    the spec's browser checks.

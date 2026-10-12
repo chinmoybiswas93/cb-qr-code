@@ -3,6 +3,8 @@
 Plugin Name: CB QR Code 
 Description: A simple QR code plugin which shows a QR Code in pages for sharing the links easily.
 Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 8.1
 Author: Chinmoy Biswas
 Author URI: https://github.com/chinmoybiswas93
 Text Domain: cb-qr-code

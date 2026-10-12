@@ -189,6 +189,6 @@
             "install-path": "../endroid/qr-code"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }
