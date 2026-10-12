@@ -7,13 +7,23 @@ Where this file and `agent.md` disagree, `agent.md` wins. Where either disagrees
 
 ```php
 <?php
-namespace ChinmoyBiswas\CBQRCode;
+/**
+ * One-line summary.
+ *
+ * @package CBQRCode
+ */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+namespace ChinmoyBiswas\CBQRCode\App\…;   // path matches namespace: app/Hooks/Handlers → App\Hooks\Handlers
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 ```
 
-Templates have no namespace but keep the `ABSPATH` guard and import helpers with
-`use function ChinmoyBiswas\CBQRCode\…;`.
+Views (`app/Views/`) have no namespace but keep the `ABSPATH` guard. They read only the variables
+passed to `App::view()->render()` (documented in a `@var` block at the top). They don't fetch
+settings themselves. After adding or moving a class, run `composer dump-autoload -o --no-dev`
+and `git add -f vendor/composer/`.
 
 Existing style: 4-space indent, short array syntax `[]`, braces on their own line for classes and
 methods, public methods prefixed `cbqrcode_`. Match it in the code you touch; don't reformat the
@@ -21,16 +31,18 @@ rest. PHP 7.4 syntax only, even though the runtime floor is 8.1 (see `agent.md` 
 
 ## The input pattern
 
-Every write path — today the two AJAX handlers in `Admin.php` — runs in this order, and nothing
-is reordered or skipped:
+Every write path — today `SettingsAjaxHandler` and `PreviewAjaxHandler` — runs in this order, and
+nothing is reordered or skipped:
 
-1. **Nonce** — `wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ?? '' ) ), 'cbqrcode_ajax_nonce' )`
-   (or `check_ajax_referer( 'cbqrcode_ajax_nonce', 'security', false )`).
-2. **Capability** — `current_user_can( 'manage_options' )`.
+1. **Nonce** and 2. **Capability**: `if ( ! AjaxGuard::verify( 'errors' | 'message' ) ) { return; }`.
+   That's `check_ajax_referer( 'cbqrcode_ajax_nonce', 'security', false )`, then
+   `current_user_can( 'manage_options' )`, each failing with an escaped message in the handler's JSON
+   shape. Put the `phpcs:disable/enable WordPress.Security.NonceVerification.Missing` pair around
+   the `$_POST` reads that follow it.
 3. **Sanitize each field individually**, from `wp_unslash()`, into a local `$sanitized_input`
    array. Never sanitize a whole `$_POST` array, never pass `$_POST` onward.
-4. **Validate** the sanitized array with `cbqrcode_validate_fields( $field_names, $sanitized_input )`.
-   Add rules to `cbqrcode_get_field_definitions()`, not inline.
+4. **Validate** the sanitized array with `Settings::cbqrcode_validate_fields( $field_names, $sanitized_input )`.
+   Add rules to `Settings::cbqrcode_get_field_definitions()`, not inline.
 5. **Act**, using only the sanitized array.
 
 `wp_send_json_error()`/`wp_send_json_success()` die, so no `return` is needed after them — but the

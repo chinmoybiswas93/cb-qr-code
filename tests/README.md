@@ -9,6 +9,7 @@ WordPress.org zip.
 | `snapshot.sh <label>` | Captures everything the plugin renders or returns into `snapshots/<label>/` (32 files). |
 | `compare.sh <a> <b>` | `diff -ru` of two snapshots. Prints `identical: …` and exits 0, or prints the diff and exits 1. |
 | `browser.sh <label>` | Runs `browser/checklist.js` through `playwright-cli run-code` (34 checks), with screenshots in `snapshots/<label>/screens/`. |
+| `lib/hooks.php` | Run with `wp eval-file`. Prints the plugin's hook table (hook, priority, method, args) so a refactor can be checked for unchanged registration, in admin context (`--exec='define("WP_ADMIN", true);'`) and frontend context. |
 | `lib/extract.php` | Pulls the plugin-owned markup out of a page (`frontend`, `admin`) or serializes the Appearance form (`form`). |
 
 `snapshots/` is gitignored. Its contents are site-specific: URLs, attachment IDs and PNG bytes.
