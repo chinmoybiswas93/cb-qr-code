@@ -3,8 +3,9 @@
 **Contributors:** chinmoy709  
 **Tags:** qr code, sharing, shortcode, post, page  
 **Requires at least:** 6.0  
-**Tested up to:** 6.8
-**Stable tag:** 1.0.3
+**Tested up to:** 6.8  
+**Requires PHP:** 7.4  
+**Stable tag:** 1.0.0
 **License:** GPL-2.0+  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -64,32 +65,16 @@ CB QR Code lets you add a customizable QR code to your WordPress content. Visito
 
 ## Changelog
 
-### 1.0.3
-* **SECURITY:** Implemented FluentSecurity early sanitization pattern for WordPress.org compliance
-* **SECURITY:** Enhanced input validation with proper wp_unslash() usage
-* **SECURITY:** Individual field processing (no bulk $_POST processing)
-* **IMPROVED:** Enhanced custom URL dependency validation with user-friendly error messages
-* **IMPROVED:** Hex color validation and processing for QR code customization
-* **FIXED:** Custom URL field validation now properly shows required field error
-* **OPTIMIZED:** Code cleanup removing non-essential comments
-* **OPTIMIZED:** Helper function cleanup and redundant code removal
-* **COMPLIANT:** Full WordPress.org security standards implementation
+### 1.0.0 (2025-10-04)
+* Initial release on [WordPress.org](https://wordpress.org/plugins/cb-qr-code/)
+* Local QR code generation using endroid/qr-code library
+* Customizable appearance options
+* Support for posts, pages, and custom post types
+* Live preview functionality
+* Click-to-copy link feature
+* Developer hooks for extensibility
 
-### 1.0.2
-* **NEW:** Local QR code generation using endroid/qr-code library (WordPress.org compliant)
-* **NEW:** Persistent admin tabs - remembers last active tab after page reload
-* **IMPROVED:** Replaced custom autoloader with modern PSR-4 Composer autoloading
-* **IMPROVED:** Enhanced admin preview with real-time AJAX updates
-* **REMOVED:** Media post type from available options (better UX)
-* **REMOVED:** External API dependency for QR generation
-* **FIXED:** Data URI handling for QR code images
-* **OPTIMIZED:** Cleaned up debug lines and comments for production
-
-### 1.0.1
-* Updated About and Support
-
-### 1.0.0
-* Initial release
+Versions 1.0.1–1.0.3 were GitHub-only pre-release labels; their changes all shipped in 1.0.0.
 
 ---
 
@@ -102,14 +87,8 @@ See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html) for details.
 
 ## Upgrade Notice
 
-### 1.0.3
-Major security update implementing FluentSecurity early sanitization pattern, enhanced validation logic, and WordPress.org compliance. Recommended update for all users.
-
-### 1.0.2
-Major update with local QR generation, persistent admin tabs, and improved performance. No external dependencies required.
-
 ### 1.0.0
-First release.
+Initial release of CB QR Code plugin with local QR generation and customizable appearance options.
 
 ---
 

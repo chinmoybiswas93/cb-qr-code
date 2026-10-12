@@ -1,6 +1,6 @@
 # WordPress.org Repository Submission Instructions
 
-## CB QR Code Plugin v1.0.3
+## CB QR Code Plugin v1.0.0
 
 ### Pre-Submission Checklist
 
@@ -41,22 +41,23 @@ cd cb-qr-code-clean
 # Remove development files
 rm -rf .git* .DS_Store *.md
 rm -rf DEVELOPMENT_INSTRUCTIONS.md ISSUES.md WORDPRESS_REPO_INSTRUCTIONS.md
+rm -rf context .claude   # agent rules and context (agent.md, CLAUDE.md go with *.md above)
 
 # Verify vendor directory is clean
 du -sh vendor  # Should be ~800KB
 
 # Create submission ZIP with version number
 cd ..
-zip -r cb-qr-code-1.0.3.zip cb-qr-code-clean -x "*.git*" "*.DS_Store"
+zip -r cb-qr-code-1.0.0.zip cb-qr-code-clean -x "*.git*" "*.DS_Store"
 
 # Rename for WordPress.org submission
 mv cb-qr-code-clean cb-qr-code
-zip -r cb-qr-code-1.0.3.zip cb-qr-code -x "*.git*" "*.DS_Store"
+zip -r cb-qr-code-1.0.0.zip cb-qr-code -x "*.git*" "*.DS_Store"
 ```
 
 ### 2. **WordPress.org Plugin Directory**
 1. Go to https://wordpress.org/plugins/developers/add/
-2. Upload `cb-qr-code-1.0.3.zip` (main folder must be named `cb-qr-code`)
+2. Upload `cb-qr-code-1.0.0.zip` (main folder must be named `cb-qr-code`)
 3. Fill out plugin information:
    - **Plugin Name**: CB QR Code
    - **Description**: A simple QR code plugin which shows a QR Code in pages for sharing the links easily
@@ -79,7 +80,7 @@ Create these files in the plugin directory for WordPress.org:
 
 #### Folder Structure
 - ✅ Main plugin folder named: `cb-qr-code`
-- ✅ ZIP file named: `cb-qr-code-{version}.zip` (e.g., `cb-qr-code-1.0.3.zip`)
+- ✅ ZIP file named: `cb-qr-code-{version}.zip` (e.g., `cb-qr-code-1.0.0.zip`)
 - ✅ Main plugin file: `cb-qr-code/cb-qr-code.php`
 - ✅ README file: `cb-qr-code/README.txt`
 
@@ -93,7 +94,7 @@ Ensure README.txt includes:
 
 ---
 
-## Version 1.0.3 Changes
+## Version 1.0.0 Changes (first WordPress.org release, 2025-10-04)
 
 ### Security Improvements
 - ✅ Implemented FluentSecurity early sanitization pattern
@@ -122,8 +123,8 @@ Ensure README.txt includes:
 ### Repository Management
 ```bash
 # After WordPress.org approval, tag the release
-git tag v1.0.3
-git push origin v1.0.3
+git tag v1.0.0
+git push origin v1.0.0
 
 # Create release branch for WordPress.org
 git checkout -b wordpress-org
@@ -157,4 +158,4 @@ git push origin wordpress-org
 **Status**: ✅ Ready for WordPress.org submission  
 **Security Grade**: A+ (FluentSecurity compliant)  
 **File Size**: ~1MB (optimized)  
-**Last Updated**: Version 1.0.3
+**Last Updated**: Version 1.0.0
