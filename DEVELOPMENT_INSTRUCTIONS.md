@@ -31,37 +31,40 @@ The plugin implements **FluentSecurity Early Sanitization Pattern** with:
 
 ### Core Components
 
-#### 1. Admin Class (`includes/Admin.php`) - Security Compliant
-- **AJAX Handlers**: `cbqrcode_ajax_save_settings()`, `cbqrcode_handle_ajax_preview()`
-- **Security Implementation**: 
+Layout follows omnio-image-optimizer: `cb-qr-code.php` → `boot/app.php` → `framework/Application`
+→ `app/Hooks/actions.php`, which registers everything. `agent.md` → *Layout* is the maintained map.
+
+#### 1. Admin handlers (`app/Hooks/Handlers/`) - Security Compliant
+- `MenuHandler` (menu page + tabs via `app/Views/admin/`), `AdminAssetHandler` (CSS/JS + `CBQRCodeAjax`)
+- **AJAX Handlers**: `SettingsAjaxHandler::cbqrcode_ajax_save_settings()`, `PreviewAjaxHandler::cbqrcode_handle_ajax_preview()`
+- **Security Implementation**:
   ```php
-  // 1. Nonce verification FIRST
-  if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['security'] ?? '')), 'cbqrcode_ajax_nonce')) {
-      wp_send_json_error(['errors' => [esc_html__('Security check failed.', 'cb-qr-code')]]);
+  // 1. Nonce, then capability — app/Http/AjaxGuard.php
+  if (!AjaxGuard::verify('errors')) {
+      return;
   }
-  
+
   // 2. IMMEDIATE individual field sanitization
   $sanitized_input = [
       'qr-code-label' => sanitize_text_field(wp_unslash($_POST['qr-code-label'] ?? '')),
       'qr-code-size' => intval(wp_unslash($_POST['qr-code-size'] ?? 150)),
-      'qr-code-dark' => sanitize_hex_color(wp_unslash($_POST['qr-code-dark'] ?? '000000'))
       // ... all fields individually sanitized with wp_unslash()
   ];
   ```
 
-#### 2. Helper Functions (`includes/helpers.php`) - Simplified & Secure
-- **No Direct $_POST Access**: Helpers only process pre-sanitized data
-- **Essential Functions Only**: 
+#### 2. Settings service (`app/Services/Settings.php`) - Simplified & Secure
+- **No Direct $_POST Access**: Only processes pre-sanitized data
+- **Static methods** (the 1.0.0 namespaced functions of the same names still work, via `boot/compat.php`):
   - `cbqrcode_get_current_settings()` - Database retrieval
   - `cbqrcode_get_allowed_post_types()` - Post type management
   - `cbqrcode_validate_fields()` - Validation of sanitized data only
   - `cbqrcode_get_field_definitions()` - Minimal validation rules
 
-#### 3. Frontend Class (`includes/Frontend.php`) - Display Only
+#### 3. Frontend handler (`app/Hooks/Handlers/FrontendHandler.php`) - Display Only
 - **No User Input Processing**: Only displays stored data
 - **Proper Escaping**: All output properly escaped with `esc_attr()`, `esc_html()`, `esc_url()`
 
-#### 4. QR Generator (`includes/QRGenerator.php`) - Validation Heavy
+#### 4. QR Generator (`app/Services/QRGenerator.php`) - Validation Heavy
 - **Input Validation**: Validates all parameters with type checking
 - **File Security**: Comprehensive image validation and path checking
 - **Error Handling**: Try-catch blocks for safe QR generation
@@ -302,11 +305,10 @@ try {
 ### 2. WordPress Standards Validation
 ```bash
 # PHP Syntax Check
-php -l includes/Admin.php
-php -l includes/helpers.php
+# (agent.md → Verify has the exact commands: PHP 8.2 over everything, 7.4 over our own code)
+find app boot config framework -name '*.php' -exec php -l {} \;
 
-# WordPress Coding Standards (if installed)
-phpcs --standard=WordPress includes/
+# Plugin Check's PHPCS ruleset — see agent.md → Verify
 ```
 
 ### 3. Functional Testing
@@ -334,7 +336,7 @@ phpcs --standard=WordPress includes/
 ```bash
 # Required before submission
 composer install --no-dev
-php -l includes/*.php
+find app boot config framework -name '*.php' -exec php -l {} \;
 ```
 
 ### 3. WordPress Standards Compliance

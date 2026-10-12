@@ -8,24 +8,31 @@ no remote service is ever called.
 
 | Surface | Entry point | What happens |
 |---|---|---|
-| **Frontend** | `the_content` filter → `Frontend::cbqrcode_append_qr_code()` | On `is_singular()` for an allowed post type, builds a PNG data URI and appends `<div class="cbqrcode-qr …" data-url="…">` after the content. `script.js` copies `data-url` to the clipboard on click |
+| **Frontend** | `the_content` filter → `FrontendHandler::cbqrcode_append_qr_code()` | On `is_singular()` for an allowed post type, builds a PNG data URI and appends `<div class="cbqrcode-qr …" data-url="…">` after the content. `script.js` copies `data-url` to the clipboard on click |
 | **Admin** | Top-level menu *CB QR Code* (`manage_options`) | Four tabs: Appearance (form + live preview), Settings (post types, URL mode), About, Support. Saves and previews over `admin-ajax.php` |
 
 ## Data flow
 
 ```
 Appearance/Settings form ─ajaxSave()─▶ wp_ajax_cbqrcode_save_settings
-                                        nonce → cap → sanitize → cbqrcode_validate_fields()
+                                        SettingsAjaxHandler: AjaxGuard (nonce → cap) → sanitize
+                                        → Settings::cbqrcode_validate_fields()
                                         → array_merge into cbqrcode_settings
                                         (post types → cbqrcode_post_types)
 
 Appearance input change ─generateQrCodePreview()─▶ wp_ajax_cbqrcode_preview
+                                        PreviewAjaxHandler: AjaxGuard → sanitize
                                         → QRGenerator::generate( site_url() or custom URL )
                                         → JSON { html } → injected into #cbqrcode-preview
 
-Singular page view ─▶ the_content ─▶ QRGenerator::generate( permalink or custom URL )
+Singular page view ─▶ the_content ─▶ FrontendHandler → QRGenerator::generate( permalink or custom URL )
                                      → appended HTML, wrapped by the two public filters
 ```
+
+All of it is wired up from `app/Hooks/actions.php`: on `plugins_loaded`, admin requests (including
+`admin-ajax.php`) get the four admin handlers, everything else gets `FrontendHandler`. Code lives
+in `app/Services/` (`QRGenerator`, `Settings`), views in `app/Views/admin/`; `agent.md` → Layout
+has the full map.
 
 The QR is **regenerated on every page view** — there is no cache. See `issues.md`.
 
@@ -34,7 +41,7 @@ The QR is **regenerated on every page view** — there is no cache. See `issues.
 `cbqrcode_settings` is one array; its keys are the form field names. Defaults are not centralised —
 each reader supplies its own fallback, and they disagree (see `issues.md`):
 
-| Key | Meaning | Frontend default | Template default |
+| Key | Meaning | Frontend default | View default (`app/Views/admin/`) |
 |---|---|---|---|
 | `cbqrcode-url-mode` | `permalink` \| `custom` | `permalink` | `permalink` |
 | `cbqrcode-custom-url` | Used when mode is `custom` | `''` | `''` |

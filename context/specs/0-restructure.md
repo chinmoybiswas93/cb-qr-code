@@ -1,5 +1,7 @@
 # 0 — Restructure onto Omnio's layout (executable plan)
 
+> **Status: done** (PRs #1–#5, 2026-10-13). Every PR passed G1–G8, and `baseline == pr-0/a/b/c` with 32/32 identical captures each time. Two deviations from the text below are recorded in the PRs: `Settings` kept the `cbqrcode_`-prefixed method names (agent.md rule) instead of `current()` etc., and the `.pot` check compares against the strings in the 1.0.0 *code*, because the committed `.pot` turned out to be hand-written and stale.
+
 | Tier | Depends on | Size |
 |---|---|---|
 | Foundation (before 1) | — | L — 1 docs PR + PR 0 + PRs A, B, C, merged one at a time |

@@ -13,7 +13,7 @@ Everything lives under `app/public/wp-content/plugins/cb-qr-code/`. Text domain 
 |---|---|
 | PHP floor | **8.1** — set by `endroid/qr-code` 4.8.5 (`^8.1`), whose Composer platform check refuses to load below it (issue #12). Header and readme both say `Requires PHP: 8.1` |
 | PHP syntax | **7.4-compatible anyway** — no enums, readonly, constructor promotion, `match`, nullsafe `?->`, named args, union types. Keeps a later endroid downgrade possible |
-| Autoload | Composer PSR-4: `ChinmoyBiswas\CBQRCode\App\` → `app/`, `…\Framework\` → `framework/`, `ChinmoyBiswas\CBQRCode\` → `includes/` (until spec 0 PR C); plus `files: includes/helpers.php`. After moving a class: `composer dump-autoload -o --no-dev`, then `git add -f vendor/composer/` |
+| Autoload | Composer PSR-4: `ChinmoyBiswas\CBQRCode\App\` → `app/`, `…\Framework\` → `framework/`; plus `files: boot/compat.php` (the 1.0.0 names). After adding or moving a class: `composer dump-autoload -o --no-dev`, then `git add -f vendor/composer/` |
 | Runtime deps | `endroid/qr-code` 4.8.5 → `bacon/bacon-qr-code` 2.0.8, `dasprid/enum` 1.0.6. `PngWriter` needs **GD** |
 | JS / CSS | Hand-written jQuery in `assets/js/`, plain CSS in `assets/css/`. No npm, no bundler |
 
@@ -28,6 +28,9 @@ task, and then `composer install --no-dev` and diff `vendor/` before committing.
 cb-qr-code.php        Header, CBQRCODE_PLUGIN_{PATH,URL,VERSION}, vendor/autoload.php,
                       then boot/app.php
 boot/app.php          Returns the boot closure → new Framework\Application( __FILE__ )
+boot/compat.php       1.0.0 public names, permanent: QRGenerator class_alias, the 4
+                      namespaced cbqrcode_* helper functions → Settings, and no-op
+                      Admin/Frontend singletons. Composer "files" — loaded every request
 config/app.php        Plain array via App::config()->get('app.…'): option names, AJAX
                       actions, nonce, admin page slug — all contracts
 framework/            ChinmoyBiswas\CBQRCode\Framework\ — the slim kernel
@@ -54,8 +57,6 @@ app/                  ChinmoyBiswas\CBQRCode\App\
     Settings.php      Static: settings getters, field definitions, cbqrcode_validate_fields()
   Views/admin/        header, appearance, settings, about, support — data passed in by
                       MenuHandler ($settings, $post_types, $allowed_post_types)
-includes/, templates/ 1.0.0 code, no longer loaded — removed in spec 0 PR C (helpers.php is
-                      still Composer-autoloaded until then)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)
 languages/            cb-qr-code.pot
 tests/                Snapshot/compare/browser harness — see tests/README.md. Not shipped
@@ -129,7 +130,7 @@ is started from `app/public`** — a session started inside this plugin folder d
 - Match the surrounding style (4-space indent, short arrays, `cbqrcode_`-prefixed method names).
   Don't reformat code you aren't otherwise changing.
 - Version bumps touch **three** places together: the plugin header, `CBQRCODE_PLUGIN_VERSION`, and
-  `Stable tag` in `readme.txt` — plus the `templates/about.php` fallback and the `.pot` header.
+  `Stable tag` in `readme.txt` — plus the `app/Views/admin/about.php` fallback and the `.pot` header.
 
 ## Verify before claiming anything works
 

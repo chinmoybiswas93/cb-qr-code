@@ -86,7 +86,9 @@ Explain why, not what. No commented-out code, no `TODO` markers — put the open
 ## Where `DEVELOPMENT_INSTRUCTIONS.md` has drifted from the code
 
 - Says hex colors use `sanitize_hex_color()`; the code uses `sanitize_text_field()` and validates
-  with a regex in `cbqrcode_validate_fields()`.
+  with a regex in `Settings::cbqrcode_validate_fields()`.
+- Its security snippet shows the 1.0.0 inline `wp_verify_nonce()`; handlers now call
+  `AjaxGuard::verify()` (see *The input pattern* above).
 - Says "WordPress ≥ 5.0"; the readme says *Requires at least: 6.0*.
 - Suggests `phpcs --standard=WordPress`; the codebase is not WPCS-formatted and that standard will
   flag every line. Use Plugin Check's ruleset (command in `agent.md`), which is what review runs.

@@ -32,7 +32,7 @@ one branch = one PR. Status: `todo` → `in progress` → `in review` → `done`
 
 | # | Feature | Summary | Tier | Depends on | Status |
 |---|---|---|---|---|---|
-| 0 | [Restructure](specs/0-restructure.md) | Docs PR → PR 0 (PHP floor 8.1, issue #12) → A kernel → B handlers → C compat; each gated by snapshot diffs + browser pass | Foundation | — | in progress — docs [#1](https://github.com/chinmoybiswas93/cb-qr-code/pull/1), PR 0 [#2](https://github.com/chinmoybiswas93/cb-qr-code/pull/2), PR A [#3](https://github.com/chinmoybiswas93/cb-qr-code/pull/3) merged; PR B in review |
+| 0 | [Restructure](specs/0-restructure.md) | omnio-style `boot/` + `framework/` + `app/` layout; 1.0.0 names kept via `boot/compat.php`; output byte-identical to 1.0.0 throughout | Foundation | — | done — [#1](https://github.com/chinmoybiswas93/cb-qr-code/pull/1) docs, [#2](https://github.com/chinmoybiswas93/cb-qr-code/pull/2) PHP 8.1, [#3](https://github.com/chinmoybiswas93/cb-qr-code/pull/3) kernel, [#4](https://github.com/chinmoybiswas93/cb-qr-code/pull/4) handlers, [#5](https://github.com/chinmoybiswas93/cb-qr-code/pull/5) compat |
 | 1 | [Shortcode](specs/1-shortcode.md) | `[cbqrcode]` with attribute overrides; extract a shared renderer + one defaults source | Must | — | todo |
 | 2 | [Gutenberg block](specs/2-gutenberg-block.md) | Dynamic block, no build step, ServerSideRender preview | Must | 1 | todo |
 | 3 | [PNG download](specs/3-download-button.md) | Optional download button, slug-based filename | Must | 1 | todo |
@@ -53,4 +53,4 @@ one branch = one PR. Status: `todo` → `in progress` → `in review` → `done`
 | 18 | [Developer API](specs/18-developer-api.md) | Global PHP functions + data/options filters; auth-only REST later | Later | 1, 9 | todo |
 | 19 | [Design styles](specs/19-design-styles.md) | Own renderer from endroid's matrix: dots/rounded/eyes | Later | 4, 9 | todo |
 
-Suggested order: 0 → 1 → 7 → 8 → 6 → 3 → 4 → 5 → 9 → 2 → 14 → 13 → 11 → 12 → 10 → rest.
+Suggested order: ~~0~~ → 1 → 7 → 8 → 6 → 3 → 4 → 5 → 9 → 2 → 14 → 13 → 11 → 12 → 10 → rest.
