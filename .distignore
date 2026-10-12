@@ -1,0 +1,18 @@
+# Files kept out of the WordPress.org zip. Used as
+#   rsync -a --exclude-from=.distignore ./ <dest>/cb-qr-code/
+# (see WORDPRESS_REPO_INSTRUCTIONS.md). Patterns are rsync patterns: a leading
+# slash anchors to the plugin root.
+
+# Version control and OS files
+.git*
+.DS_Store
+/.distignore
+
+# Agent rules, plans and dev docs (readme.txt is the shipped readme)
+/*.md
+/context/
+/.claude/
+
+# Test harness and its output
+/tests/
+/.playwright-cli/
