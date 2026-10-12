@@ -6,17 +6,6 @@ to singular posts/pages. Small, flat, no build step — PHP 7.4+, jQuery, plain 
 Everything lives under `app/public/wp-content/plugins/cb-qr-code/`. Text domain and slug are
 `cb-qr-code`; the function/option/hook prefix is `cbqrcode_`.
 
-## Which copy am I in?
-
-There are **two** copies of this plugin on the site. Edit only this one.
-
-| Folder | What it is |
-|---|---|
-| `plugins/cb-qr-code/` | **This one.** Git working tree (`github.com/chinmoybiswas93/cb-qr-code`), v1.0.0 — shipped files match the live release |
-| `plugins/cb-qr-code-org/` | **What is live on WordPress.org** (v1.0.0, published 2025-10-04), not version-controlled. Byte-identical to the live zip and to this repo's shipped files (tag `v1.0.0`). Holds the only correctly formatted `readme.txt`. Read it, don't edit it |
-
-Both declare the same namespace and functions — **activating both is a fatal error.** As of
-2026-10-13 neither is active on cb-test; activate this one to test in the browser.
 
 ## Stack
 
@@ -71,6 +60,7 @@ AJAX requests run with `is_admin()` true, so `Admin` owns them; `Frontend` never
 | Security pattern, PHP/JS style, i18n | `context/code-standards.md` — read before writing PHP |
 | Known defects | `context/issues.md` — **read directly**, short |
 | Current phase / what's in flight | `context/progress-tracker.md` — **read directly**, short |
+| Planned features (one spec per PR) | `context/specs/` — read the one you're building, plus `specs/README.md` |
 | Release / WordPress.org checks | `context/pre-release-checks.md` |
 
 `DEVELOPMENT_INSTRUCTIONS.md` and `WORDPRESS_REPO_INSTRUCTIONS.md` are the older human docs. They
