@@ -9,11 +9,10 @@
     "autoload": {
         "psr-4": {
             "ChinmoyBiswas\\CBQRCode\\App\\": "app/",
-            "ChinmoyBiswas\\CBQRCode\\Framework\\": "framework/",
-            "ChinmoyBiswas\\CBQRCode\\": "includes/"
+            "ChinmoyBiswas\\CBQRCode\\Framework\\": "framework/"
         },
         "files": [
-            "includes/helpers.php"
+            "boot/compat.php"
         ]
     },
     "config": {

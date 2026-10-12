@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    '60fe4a8105220d8eda8556ff7a66693e' => $baseDir . '/includes/helpers.php',
+    'cf24c0e9312bb6c32ed422151419644b' => $baseDir . '/boot/compat.php',
 );

@@ -10,6 +10,5 @@ return array(
     'DASPRiD\\Enum\\' => array($vendorDir . '/dasprid/enum/src'),
     'ChinmoyBiswas\\CBQRCode\\Framework\\' => array($baseDir . '/framework'),
     'ChinmoyBiswas\\CBQRCode\\App\\' => array($baseDir . '/app'),
-    'ChinmoyBiswas\\CBQRCode\\' => array($baseDir . '/includes'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
 );

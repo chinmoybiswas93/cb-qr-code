@@ -26,7 +26,7 @@ there today, but the plugin has no shortcode.
 
 ## Plan
 
-1. **Move the HTML building out of `Frontend::cbqrcode_append_qr_code()` into one shared renderer**,
+1. **Move the HTML building out of `FrontendHandler::cbqrcode_append_qr_code()` (`app/Hooks/Handlers/`) into one shared renderer**,
    e.g. `Renderer::render( $args )`. The automatic QR, the shortcode, and later the block (2), the
    widget (13) and WooCommerce (15) all call it. This is Kaya's single-function pattern.
 2. **Add one defaults source**, `cbqrcode_get_defaults()`. This also closes issue #6, where
