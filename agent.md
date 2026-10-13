@@ -93,10 +93,12 @@ never loads in `admin-ajax.php`.
 | Current phase / what's in flight | `context/progress-tracker.md` — **read directly**, short |
 | Planned features (one spec per PR) | `context/specs/` — read the one you're building, plus `specs/README.md` |
 | Release / WordPress.org checks | `context/pre-release-checks.md` |
+| Release procedure (zip, tag, SVN) | `WORDPRESS_REPO_INSTRUCTIONS.md` |
 
-`DEVELOPMENT_INSTRUCTIONS.md` and `WORDPRESS_REPO_INSTRUCTIONS.md` are the older human docs. They
-have drifted from the code in places (`code-standards.md` lists where); where they disagree with
-`context/`, **the code and `context/` win**. `ISSUES.md` is empty — use `context/issues.md`.
+`DEVELOPMENT_INSTRUCTIONS.md` is the older human doc. It has drifted from the code in places
+(`code-standards.md` lists where); where it disagrees with `context/`, **the code and `context/`
+win**. `WORDPRESS_REPO_INSTRUCTIONS.md` is current (rewritten after 1.0.1). `ISSUES.md` is empty —
+use `context/issues.md`.
 
 ## Research
 
@@ -136,6 +138,20 @@ is started from `app/public`** — a session started inside this plugin folder d
   Don't reformat code you aren't otherwise changing.
 - Version bumps touch **three** places together: the plugin header, `CBQRCODE_PLUGIN_VERSION`, and
   `Stable tag` in `readme.txt` — plus the `app/Views/admin/about.php` fallback and the `.pot` header.
+
+## Commits and PRs
+
+Written for a human reviewer: short, and only what the diff doesn't already say.
+
+- **No AI attribution** — no `Co-Authored-By: Claude`, no "Generated with Claude Code".
+  `.claude/settings.json` turns Claude Code's own attribution off; don't add it by hand either.
+- **Commit:** one imperative subject line, ≤ 72 characters. Add a body only when the *why* isn't
+  obvious from the subject and diff — one to three lines, no bullet lists restating the diff.
+- **PR description:** two to five bullets — what changed and how it was verified. No tables,
+  headings or checklists unless asked. Mention anything a reviewer must not miss (a behaviour
+  change, a contract touched, something not tested).
+- Stacked PRs merge into their base branch, not `main`: merge bottom-up and retarget each to
+  `main` (or delete its base) before merging the next.
 
 ## Verify before claiming anything works
 
