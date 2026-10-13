@@ -62,6 +62,8 @@ app/                  ChinmoyBiswas\CBQRCode\App\
                       MenuHandler ($settings, $post_types, $allowed_post_types)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)
 languages/            cb-qr-code.pot
+uninstall.php         Deletes both options (per site on multisite). Every spec that stores
+                      new data adds its cleanup here in the same PR (spec 8)
 tests/                Snapshot/compare/browser harness — see tests/README.md. Not shipped
 .distignore           What stays out of the WordPress.org zip
 ```

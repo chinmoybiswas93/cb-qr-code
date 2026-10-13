@@ -16,10 +16,10 @@ The next WordPress.org upload is **1.0.1**.
 
 - Agent rules and `context/` set up (this file, `agent.md`, `CLAUDE.md`).
 - PHP 7.4 lint and Plugin Check's PHPCS ruleset (`plugin-review.xml`) both pass clean.
-- [issues.md](issues.md): the 1.0.1 fix round is in flight as four stacked PRs — A `fix/url-handling`
-  (#1 #2 #3 #7), B `fix/settings-input` (#5 #6), C `fix/assets-admin-js` (#10 #11 #13), D
-  `feat/uninstall-cleanup` (#8, spec 8) — then a separate 1.0.1 version-bump PR. #4 (cache) stays
-  open for spec 9.
+- [issues.md](issues.md): the 1.0.1 fix round is in flight as four stacked PRs, merged in order
+  A → B → C → D — A `fix/url-handling` (#1 #2 #3 #7), B `fix/settings-input` (#5 #6), C
+  `fix/assets-admin-js` (#10 #11 #13), D `feat/uninstall-cleanup` (#8, spec 8) — then a separate
+  1.0.1 version-bump PR. #4 (cache) stays open for spec 9.
 - Plugin is **active** on cb-test (Kaya QR is active too — deactivate it before running the
   `tests/` harness).
 
@@ -44,7 +44,7 @@ one branch = one PR. Status: `todo` → `in progress` → `in review` → `done`
 | 5 | [Per-post control](specs/5-per-post-control.md) | Meta box: hide on this post / custom URL for this post | Must | 1 | todo |
 | 6 | [Placement](specs/6-placement-options.md) | Before / after / both / manual; main-loop guard already landed (#3, PR A) | Must | 1 | todo |
 | 7 | [Error correction](specs/7-error-correction.md) | `auto` = High with logo; fixes hard-coded Low | Must | — | todo |
-| 8 | [Uninstall cleanup](specs/8-uninstall-cleanup.md) | `uninstall.php`; later specs add their data to it (closes #8) | Must | — | todo |
+| 8 | [Uninstall cleanup](specs/8-uninstall-cleanup.md) | `uninstall.php`; later specs add their data to it (closes #8) | Must | — | in review — PR D |
 | 9 | [QR cache](specs/9-qr-cache.md) | Files in `uploads/cb-qr-code/`, transient fallback (closes #4) | Must | 1 | todo |
 | 10 | [Dynamic QR + scans](specs/10-dynamic-qr-tracking.md) | Editable `/qr/{slug}` redirects, privacy-safe daily counts. 2 PRs | Standout | 1, 2, 9 | todo |
 | 11 | [Content types](specs/11-content-types.md) | text, phone, SMS, email, WhatsApp, WiFi, vCard via `type=` | Standout | 1, 2 | todo |

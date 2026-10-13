@@ -10,12 +10,12 @@ close it" says what would.
 | # | Issue | What would close it |
 |---|---|---|
 | 4 | **QR is regenerated on every page view.** A GD PNG render (plus logo compositing) per singular request, uncached. | Cache the data URI keyed by a hash of URL + appearance settings (transient or post meta), invalidated on settings save. |
-| 8 | **No uninstall cleanup.** No `uninstall.php`; `cbqrcode_settings` and `cbqrcode_post_types` stay in `wp_options` forever. | `uninstall.php` with the `WP_UNINSTALL_PLUGIN` guard, deleting both options. |
 
 ## Closed
 
 | # | Issue | Closed by |
 |---|---|---|
+| 8 | No uninstall cleanup; both options stayed in `wp_options` forever. | PR D (`feat/uninstall-cleanup`, spec 8): `uninstall.php` with the `WP_UNINSTALL_PLUGIN` guard deletes both options, per site on multisite. Checked through core's `uninstall_plugin()`: options survive deactivation and are gone after uninstall. Multisite loop not exercised (cb-test is single-site) |
 | 10 | Frontend `style.css`, `script.js` and jQuery loaded on every page. | PR C (`fix/assets-admin-js`): enqueued only on a singular view whose queried post type is allowed. Checked: home, search and a non-allowed page load none; the fixture post loads both |
 | 11 | Menu titles and all `admin-script.js` strings weren't translatable; dead `time()` version fallback. | PR C: `__()` on the menu titles; the 9 JS strings come from `CBQRCodeAjax.i18n` (escaped where the JS uses `.html()`); fallback removed |
 | 13 | Preview responses weren't sequenced, so a slow older response could overwrite a newer one. Reproduced deterministically by delaying the first of two requests: the stale label won. | PR C: a request counter; only the latest request's response (or error) is rendered. Same reproduction now shows the newer label |
