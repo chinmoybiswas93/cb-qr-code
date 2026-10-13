@@ -55,7 +55,9 @@ app/                  ChinmoyBiswas\CBQRCode\App\
   Services/
     QRGenerator.php   Static: generate() → PNG data URI, hex_to_rgb(), logo/attachment checks
     Settings.php      Static: settings getters, field definitions, cbqrcode_validate_fields(),
-                      cbqrcode_get_custom_url() / cbqrcode_is_http_url() (http/https only)
+                      cbqrcode_get_custom_url() / cbqrcode_is_http_url() (http/https only),
+                      cbqrcode_get_defaults() — the only defaults source — and
+                      cbqrcode_get_resolved_settings() (stored over defaults, clamped)
   Views/admin/        header, appearance, settings, about, support — data passed in by
                       MenuHandler ($settings, $post_types, $allowed_post_types)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)

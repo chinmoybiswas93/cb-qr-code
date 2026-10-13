@@ -39,29 +39,30 @@ class PreviewAjaxHandler
         }
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce (then capability) verified by AjaxGuard::verify() above, which ends the request on failure.
+        $defaults = Settings::cbqrcode_get_defaults();
         $input = [
-            'qr-code-label' => sanitize_text_field(wp_unslash($_POST['qr-code-label'] ?? '')),
-            'qr-code-size' => intval(wp_unslash($_POST['qr-code-size'] ?? 150)),
-            'qr-code-margin' => intval(wp_unslash($_POST['qr-code-margin'] ?? 2)),
-            'qr-code-dark' => sanitize_text_field(wp_unslash($_POST['qr-code-dark'] ?? '000000')),
-            'qr-code-light' => sanitize_text_field(wp_unslash($_POST['qr-code-light'] ?? 'ffffff')),
+            'qr-code-label' => sanitize_text_field(wp_unslash($_POST['qr-code-label'] ?? $defaults['qr-code-label'])),
+            'qr-code-size' => Settings::cbqrcode_sanitize_number('qr-code-size', sanitize_text_field(wp_unslash($_POST['qr-code-size'] ?? ''))),
+            'qr-code-margin' => Settings::cbqrcode_sanitize_number('qr-code-margin', sanitize_text_field(wp_unslash($_POST['qr-code-margin'] ?? ''))),
+            'qr-code-dark' => sanitize_text_field(wp_unslash($_POST['qr-code-dark'] ?? $defaults['qr-code-dark'])),
+            'qr-code-light' => sanitize_text_field(wp_unslash($_POST['qr-code-light'] ?? $defaults['qr-code-light'])),
             'qr-code-logo-id' => intval(wp_unslash($_POST['qr-code-logo-id'] ?? 0)),
-            'qr-code-logo-size' => intval(wp_unslash($_POST['qr-code-logo-size'] ?? 50)),
-            'qr-code-font-size' => intval(wp_unslash($_POST['qr-code-font-size'] ?? 12))
+            'qr-code-logo-size' => Settings::cbqrcode_sanitize_number('qr-code-logo-size', sanitize_text_field(wp_unslash($_POST['qr-code-logo-size'] ?? ''))),
+            'qr-code-font-size' => Settings::cbqrcode_sanitize_number('qr-code-font-size', sanitize_text_field(wp_unslash($_POST['qr-code-font-size'] ?? '')))
         ];
         // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         $custom_url = Settings::cbqrcode_get_custom_url();
         $qr_url_text = $custom_url !== '' ? $custom_url : site_url();
 
-        $label = $input['qr-code-label'] ?? 'Scan Me';
-        $size = $input['qr-code-size'] ?? 150;
-        $margin = $input['qr-code-margin'] ?? 2;
-        $dark = $input['qr-code-dark'] ?? '000000';
-        $light = $input['qr-code-light'] ?? 'ffffff';
-        $logo_id = $input['qr-code-logo-id'] ?? 0;
-        $logo_size = $input['qr-code-logo-size'] ?? 50;
-        $font_size = $input['qr-code-font-size'] ?? 12;
+        $label = $input['qr-code-label'];
+        $size = $input['qr-code-size'];
+        $margin = $input['qr-code-margin'];
+        $dark = $input['qr-code-dark'];
+        $light = $input['qr-code-light'];
+        $logo_id = $input['qr-code-logo-id'];
+        $logo_size = $input['qr-code-logo-size'];
+        $font_size = $input['qr-code-font-size'];
 
         $foreground = QRGenerator::hex_to_rgb($dark);
         $background = QRGenerator::hex_to_rgb($light);

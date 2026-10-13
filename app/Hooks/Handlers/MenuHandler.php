@@ -51,7 +51,7 @@ class MenuHandler
         echo '<div class="cbqrcode-dashboard">';
         $view = App::view();
         $data = [
-            'settings'           => Settings::cbqrcode_get_current_settings(),
+            'settings'           => Settings::cbqrcode_get_resolved_settings(),
             'post_types'         => $this->cbqrcode_get_public_post_types(),
             'allowed_post_types' => Settings::cbqrcode_get_allowed_post_types(),
         ];

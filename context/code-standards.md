@@ -54,9 +54,13 @@ preview handler has them, and they're harmless.
 |---|---|---|
 | Plain text | `sanitize_text_field()` | Strips `%xx` octets — **never use it on a URL** |
 | URL | `esc_url_raw()` | Then validate scheme (`http`/`https`) |
-| Integer | `absint()` / `intval()` then clamp | Clamp to the same range the generator uses |
+| Integer | `Settings::cbqrcode_sanitize_number( $key, … )` | Clamps to `cbqrcode_get_number_ranges()` (the generator's ranges); empty → default |
 | Hex color | `sanitize_hex_color_no_hash()` | Stored without `#` |
-| Enum (`left`/`right`, `permalink`/`custom`) | `sanitize_key()` + `in_array( …, true )` whitelist | |
+| Enum (`left`/`right`, `permalink`/`custom`) | `sanitize_key()` + `in_array( …, true )` whitelist | Position: `Settings::cbqrcode_sanitize_position()` |
+
+Defaults come from `Settings::cbqrcode_get_defaults()` only — no `?? 120` fallbacks in readers.
+Render from `Settings::cbqrcode_get_resolved_settings()`; the raw option
+(`cbqrcode_get_current_settings()`) is what the public filters receive.
 | Post-type list | `array_map( 'sanitize_key', … )` + check against `get_post_types( [ 'public' => true ] )` | |
 
 ## Output

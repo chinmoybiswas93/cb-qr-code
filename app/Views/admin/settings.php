@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Settings tab. Rendered by MenuHandler::cbqrcode_settings_page().
  *
- * @var array                          $settings           Stored cbqrcode_settings.
+ * @var array                          $settings           cbqrcode_settings over the defaults (Settings::cbqrcode_get_resolved_settings()), so every key is set.
  * @var array<string, \WP_Post_Type>   $post_types         Public post types, minus attachments.
  * @var string[]                       $allowed_post_types Post types the QR shows on.
  */
@@ -30,14 +30,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     </div>
     <div class="cbqrcode-form-row cbqrcode-form-row-urlmode-select">
         <label style="margin-right:16px;">
-            <input type="radio" name="cbqrcode-url-mode" value="permalink" <?php checked(($settings['cbqrcode-url-mode'] ?? 'permalink'), 'permalink'); ?>>
+            <input type="radio" name="cbqrcode-url-mode" value="permalink" <?php checked(($settings['cbqrcode-url-mode']), 'permalink'); ?>>
             <?php esc_html_e('Permalink', 'cb-qr-code'); ?>
         </label>
         <label style="margin-right:16px;">
-            <input type="radio" name="cbqrcode-url-mode" value="custom" <?php checked(($settings['cbqrcode-url-mode'] ?? ''), 'custom'); ?>>
+            <input type="radio" name="cbqrcode-url-mode" value="custom" <?php checked(($settings['cbqrcode-url-mode']), 'custom'); ?>>
             <?php esc_html_e('Custom URL', 'cb-qr-code'); ?>
         </label>
-        <input type="url" id="cbqrcode-custom-url" name="cbqrcode-custom-url" placeholder="Enter custom URL" value="<?php echo esc_url($settings['cbqrcode-custom-url'] ?? ''); ?>" style="min-width:260px;<?php echo (($settings['cbqrcode-url-mode'] ?? 'permalink') === 'custom') ? '' : 'display:none;'; ?>">
+        <input type="url" id="cbqrcode-custom-url" name="cbqrcode-custom-url" placeholder="Enter custom URL" value="<?php echo esc_url($settings['cbqrcode-custom-url']); ?>" style="min-width:260px;<?php echo (($settings['cbqrcode-url-mode']) === 'custom') ? '' : 'display:none;'; ?>">
     </div>
     <input type="hidden" name="action" value="cbqrcode_save_settings">
     <input type="hidden" name="tab" value="settings">
