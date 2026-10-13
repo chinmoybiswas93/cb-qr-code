@@ -9,6 +9,7 @@ namespace ChinmoyBiswas\CBQRCode\App\Hooks\Handlers;
 
 use ChinmoyBiswas\CBQRCode\App\Http\AjaxGuard;
 use ChinmoyBiswas\CBQRCode\App\Services\QRGenerator;
+use ChinmoyBiswas\CBQRCode\App\Services\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -16,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Renders the Appearance preview. Moved from Admin; the nonce and capability
- * checks now run through AjaxGuard, everything after them is unchanged.
+ * checks run through AjaxGuard.
  */
 class PreviewAjaxHandler
 {
@@ -50,14 +51,8 @@ class PreviewAjaxHandler
         ];
         // phpcs:enable WordPress.Security.NonceVerification.Missing
 
-        $current_settings = get_option('cbqrcode_settings', []);
-        $url_mode = $current_settings['cbqrcode-url-mode'] ?? 'permalink';
-        $custom_url = $current_settings['cbqrcode-custom-url'] ?? '';
-
-        $qr_url_text = site_url();
-        if ($url_mode === 'custom' && !empty($custom_url)) {
-            $qr_url_text = $custom_url;
-        }
+        $custom_url = Settings::cbqrcode_get_custom_url();
+        $qr_url_text = $custom_url !== '' ? $custom_url : site_url();
 
         $label = $input['qr-code-label'] ?? 'Scan Me';
         $size = $input['qr-code-size'] ?? 150;
@@ -77,7 +72,8 @@ class PreviewAjaxHandler
             $logo_path = QRGenerator::get_logo_path_from_attachment($logo_id);
         }
 
-        $qr_data_uri = QRGenerator::generate(esc_url($qr_url_text), [
+        // Raw URL: esc_url() is for HTML and put &#038; into the code (issue #2).
+        $qr_data_uri = QRGenerator::generate($qr_url_text, [
             'size' => $size,
             'margin' => $margin,
             'foreground' => $foreground,

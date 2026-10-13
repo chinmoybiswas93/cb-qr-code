@@ -16,14 +16,18 @@ The next WordPress.org upload is **1.0.1**.
 
 - Agent rules and `context/` set up (this file, `agent.md`, `CLAUDE.md`).
 - PHP 7.4 lint and Plugin Check's PHPCS ruleset (`plugin-review.xml`) both pass clean.
-- [issues.md](issues.md) has open entries from a read-through; #1 (percent-encoded URLs) matters
-  most for the next release.
-- Plugin is **not active** on cb-test and has no saved settings.
+- [issues.md](issues.md): the 1.0.1 fix round is in flight as four stacked PRs — A `fix/url-handling`
+  (#1 #2 #3 #7), B `fix/settings-input` (#5 #6), C `fix/assets-admin-js` (#10 #11 #13), D
+  `feat/uninstall-cleanup` (#8, spec 8) — then a separate 1.0.1 version-bump PR. #4 (cache) stays
+  open for spec 9.
+- Plugin is **active** on cb-test (Kaya QR is active too — deactivate it before running the
+  `tests/` harness).
 
 ## Next
 
-Issues 1–3 as one "URL handling" change for 1.0.1. After that, the feature roadmap below. Specs 1
-and 6 overlap issues #3/#6 — fold those fixes into whichever lands first.
+Land the fix PRs A–D and the 1.0.1 bump. After that, the feature roadmap below. Issue #3 is
+fixed by PR A, so spec 6 only adds the placement setting; issue #6 is fixed by PR B, whose
+`Settings::cbqrcode_get_defaults()` is the defaults source spec 1 builds on.
 
 ## Feature roadmap
 
@@ -38,7 +42,7 @@ one branch = one PR. Status: `todo` → `in progress` → `in review` → `done`
 | 3 | [PNG download](specs/3-download-button.md) | Optional download button, slug-based filename | Must | 1 | todo |
 | 4 | [SVG download](specs/4-svg-download.md) | endroid `SvgWriter` (already in vendor) for print-quality output | Must | 3 | todo |
 | 5 | [Per-post control](specs/5-per-post-control.md) | Meta box: hide on this post / custom URL for this post | Must | 1 | todo |
-| 6 | [Placement](specs/6-placement-options.md) | Before / after / both / manual; main-loop guard (closes #3) | Must | 1 | todo |
+| 6 | [Placement](specs/6-placement-options.md) | Before / after / both / manual; main-loop guard already landed (#3, PR A) | Must | 1 | todo |
 | 7 | [Error correction](specs/7-error-correction.md) | `auto` = High with logo; fixes hard-coded Low | Must | — | todo |
 | 8 | [Uninstall cleanup](specs/8-uninstall-cleanup.md) | `uninstall.php`; later specs add their data to it (closes #8) | Must | — | todo |
 | 9 | [QR cache](specs/9-qr-cache.md) | Files in `uploads/cb-qr-code/`, transient fallback (closes #4) | Must | 1 | todo |

@@ -15,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Appends the QR code to singular content of allowed post types. Moved from Frontend unchanged.
+ * Appends the QR code to the main post's content on singular views of allowed
+ * post types. Moved from Frontend.
  */
 class FrontendHandler
 {
@@ -37,23 +38,25 @@ class FrontendHandler
     }
     public function cbqrcode_append_qr_code($content)
     {
-        if (!is_singular())
+        // Only the main post's own content (issue #3). the_content also runs for other
+        // posts on the page (a Query Loop on a single post, related-post blocks) and
+        // outside the loop (SEO plugins building descriptions); in block themes the
+        // whole template renders inside the main loop, so the post ID check is what
+        // tells a Query Loop item from the main post.
+        $post_id = get_the_ID();
+        if (!is_singular() || !in_the_loop() || !is_main_query() || $post_id !== get_queried_object_id())
             return $content;
 
-        $post_type = get_post_type();
+        $post_type = get_post_type($post_id);
 
         $allowed_post_types = Settings::cbqrcode_get_allowed_post_types();
 
         if (!in_array($post_type, $allowed_post_types))
             return $content;
 
-        $post_url = get_permalink();
         $settings = Settings::cbqrcode_get_current_settings();
-        $url_mode = $settings['cbqrcode-url-mode'] ?? 'permalink';
-        $custom_url = $settings['cbqrcode-custom-url'] ?? '';
-        $qr_url_text = $post_url;
-        if ($url_mode === 'custom' && !empty($custom_url))
-            $qr_url_text = $custom_url;
+        $custom_url = Settings::cbqrcode_get_custom_url();
+        $qr_url_text = $custom_url !== '' ? $custom_url : get_permalink($post_id);
         $size = $settings['qr-code-size'] ?? 120;
         $margin = $settings['qr-code-margin'] ?? 2;
         $dark = $settings['qr-code-dark'] ?? '000000';

@@ -2,8 +2,8 @@
 /**
  * QR image generation (endroid/qr-code, local only).
  *
- * Moved from includes/QRGenerator.php unchanged; the old class name is kept
- * as an alias (boot/compat.php, spec 0 PR C).
+ * Moved from includes/QRGenerator.php; the old class name is kept as an alias
+ * (boot/compat.php, spec 0 PR C).
  *
  * @package CBQRCode
  */
@@ -28,8 +28,10 @@ class QRGenerator
             if (empty($text) || !is_string($text)) {
                 return '';
             }
-            
-            $text = sanitize_text_field($text);
+
+            // $text is encoded into the image, never output as HTML, so it is used as
+            // given. sanitize_text_field() here deleted the %xx octets of percent-encoded
+            // permalinks (issue #1); callers sanitize input for what it is (esc_url_raw).
 
             $size = isset($options['size']) ? max(50, min(1000, absint($options['size']))) : 300;
             $margin = isset($options['margin']) ? max(0, min(20, absint($options['margin']))) : 10;

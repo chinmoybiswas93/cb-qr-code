@@ -54,7 +54,8 @@ app/                  ChinmoyBiswas\CBQRCode\App\
                       JSON error shape ('errors' for save, 'message' for preview)
   Services/
     QRGenerator.php   Static: generate() → PNG data URI, hex_to_rgb(), logo/attachment checks
-    Settings.php      Static: settings getters, field definitions, cbqrcode_validate_fields()
+    Settings.php      Static: settings getters, field definitions, cbqrcode_validate_fields(),
+                      cbqrcode_get_custom_url() / cbqrcode_is_http_url() (http/https only)
   Views/admin/        header, appearance, settings, about, support — data passed in by
                       MenuHandler ($settings, $post_types, $allowed_post_types)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)
@@ -148,10 +149,11 @@ find . -name '*.php' -not -path './vendor/*' -not -path './.git/*' -print0 | xar
 # Composer metadata is consistent (lock matches composer.json)
 composer validate --no-check-publish
 
-# Plugin Check's own PHPCS ruleset (phpcs is not on PATH; Plugin Check ships one)
+# Plugin Check's own PHPCS ruleset (phpcs is not on PATH; Plugin Check ships one).
+# tests/ is excluded: it isn't shipped, and its CLI scripts write to STDERR directly.
 "$P82" ../plugin-check/vendor/squizlabs/php_codesniffer/bin/phpcs \
   --standard=../plugin-check/phpcs-rulesets/plugin-review.xml \
-  --extensions=php --ignore='*/vendor/*' -s .
+  --extensions=php --ignore='*/vendor/*,*/tests/*' -s .
 ```
 
 Both were clean on 2026-10-13. Behaviour changes (save, preview, frontend output) need a browser

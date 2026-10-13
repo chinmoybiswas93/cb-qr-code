@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Saves the Appearance or Settings tab. Moved from Admin; the nonce and capability
- * checks now run through AjaxGuard, everything after them is unchanged.
+ * checks run through AjaxGuard.
  */
 class SettingsAjaxHandler
 {
@@ -40,9 +40,18 @@ class SettingsAjaxHandler
         $tab = sanitize_text_field(wp_unslash($_POST['tab'] ?? ''));
 
         if ($tab === 'settings') {
+            $url_mode = sanitize_key(wp_unslash($_POST['cbqrcode-url-mode'] ?? ''));
+            // esc_url_raw(), not sanitize_text_field(): the latter deletes %xx octets (issue #1).
+            $custom_url = esc_url_raw(wp_unslash($_POST['cbqrcode-custom-url'] ?? ''));
+            if ($custom_url === '') {
+                // esc_url_raw() empties javascript: and other unsafe schemes; keep the text
+                // so validation reports the scheme instead of "URL is required". It fails
+                // validation, so it is never saved.
+                $custom_url = sanitize_text_field(wp_unslash($_POST['cbqrcode-custom-url'] ?? ''));
+            }
             $sanitized_input = [
-                'cbqrcode-url-mode' => sanitize_text_field(wp_unslash($_POST['cbqrcode-url-mode'] ?? '')),
-                'cbqrcode-custom-url' => sanitize_text_field(wp_unslash($_POST['cbqrcode-custom-url'] ?? '')),
+                'cbqrcode-url-mode' => in_array($url_mode, ['permalink', 'custom'], true) ? $url_mode : '',
+                'cbqrcode-custom-url' => $custom_url,
                 'cbqrcode-post-types' => isset($_POST['cbqrcode-post-types']) && is_array($_POST['cbqrcode-post-types'])
                     ? array_map('sanitize_text_field', wp_unslash($_POST['cbqrcode-post-types']))
                     : []

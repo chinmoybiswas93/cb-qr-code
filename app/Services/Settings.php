@@ -3,8 +3,8 @@
  * Settings access and validation.
  *
  * Moved from includes/helpers.php: each namespaced function is now a static
- * method of the same name, bodies unchanged. The old functions stay available
- * as wrappers (boot/compat.php, spec 0 PR C).
+ * method of the same name. The old functions stay available as wrappers
+ * (boot/compat.php, spec 0 PR C).
  *
  * @package CBQRCode
  */
@@ -25,6 +25,42 @@ class Settings
         $post_types = array_diff($post_types, ['attachment']);
         return array_values($post_types);
     }
+
+    /**
+     * The custom URL to encode, or '' when permalink mode is on or the stored URL
+     * isn't http(s). Values saved before 1.0.1 were never scheme-checked (issue #7),
+     * so the check runs on read as well as on save.
+     *
+     * @return string Raw URL, not HTML-escaped.
+     */
+    public static function cbqrcode_get_custom_url() {
+        $settings = self::cbqrcode_get_current_settings();
+        if (($settings['cbqrcode-url-mode'] ?? 'permalink') !== 'custom') {
+            return '';
+        }
+        $custom_url = $settings['cbqrcode-custom-url'] ?? '';
+        return self::cbqrcode_is_http_url($custom_url) ? $custom_url : '';
+    }
+
+    /**
+     * Whether $url is an absolute http or https URL with a host.
+     *
+     * FILTER_VALIDATE_URL accepted javascript: and other schemes, and rejected
+     * non-ASCII paths, so the scheme and host are checked directly.
+     *
+     * @param mixed $url Candidate URL.
+     * @return bool
+     */
+    public static function cbqrcode_is_http_url($url) {
+        if (!is_string($url) || $url === '') {
+            return false;
+        }
+        $parts = wp_parse_url($url);
+        return is_array($parts)
+            && in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)
+            && !empty($parts['host']);
+    }
+
     public static function cbqrcode_get_field_definitions() {
         return [
             'cbqrcode-url-mode' => ['required' => true],
@@ -133,8 +169,8 @@ class Settings
                     break;
             }
         
-            if ($field_name === 'cbqrcode-custom-url' && !empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
-                $errors[] = esc_html__('Please enter a valid URL.', 'cb-qr-code');
+            if ($field_name === 'cbqrcode-custom-url' && !empty($value) && !self::cbqrcode_is_http_url($value)) {
+                $errors[] = esc_html__('Please enter a valid http or https URL.', 'cb-qr-code');
             }
         }
     
