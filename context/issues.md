@@ -10,6 +10,7 @@ close it" says what would.
 | # | Issue | What would close it |
 |---|---|---|
 | 4 | **QR is regenerated on every page view.** A GD PNG render (plus logo compositing) per singular request, uncached. | Cache the data URI keyed by a hash of URL + appearance settings (transient or post meta), invalidated on settings save. |
+| 14 | **A logo at the default 50% makes the QR unscannable.** Error correction is hard-coded to Low (`QRGenerator`), which recovers ~7% of the code; a 50%-wide logo covers far more. Found in the 1.0.1 browser pass: with attachment 104 as the logo, Chrome's `BarcodeDetector` decodes the QR at 10–30% logo size and fails at 50% — on `main` and on 1.0.1 alike, so not a regression. | Spec 7 (`auto` = High with a logo), and consider a lower default logo size (≤ 30%). Verify by decoding at each logo size |
 
 ## Closed
 

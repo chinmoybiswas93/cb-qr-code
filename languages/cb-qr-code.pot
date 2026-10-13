@@ -2,20 +2,21 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: CB QR Code 1.0.0\n"
+"Project-Id-Version: CB QR Code 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cb-qr-code\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-12T23:15:47+00:00\n"
+"POT-Creation-Date: 2026-10-13T16:17:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cb-qr-code\n"
 
 #. Plugin Name of the plugin
 #: cb-qr-code.php
+#: app/Hooks/Handlers/MenuHandler.php:37
 msgid "CB QR Code"
 msgstr ""
 
@@ -34,12 +35,50 @@ msgstr ""
 msgid "https://github.com/chinmoybiswas93"
 msgstr ""
 
-#: app/Hooks/Handlers/FrontendHandler.php:61
-msgid "Scan Me"
+#: app/Hooks/Handlers/AdminAssetHandler.php:48
+msgid "Select Logo Image"
 msgstr ""
 
-#: app/Hooks/Handlers/FrontendHandler.php:101
+#: app/Hooks/Handlers/AdminAssetHandler.php:49
+msgid "Use this image"
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:50
+msgid "Selected image"
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:51
+#: app/Views/admin/appearance.php:84
+#: app/Views/admin/appearance.php:87
+msgid "No image selected"
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:52
+msgid "Error generating preview"
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:53
+msgid "Dismiss this notice."
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:54
+msgid "An error occurred."
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:55
+msgid "An unexpected error occurred."
+msgstr ""
+
+#: app/Hooks/Handlers/AdminAssetHandler.php:56
+msgid "Security check failed (invalid or expired nonce). Please reload the page and try again."
+msgstr ""
+
+#: app/Hooks/Handlers/FrontendHandler.php:113
 msgid "QR Code"
+msgstr ""
+
+#: app/Hooks/Handlers/MenuHandler.php:36
+msgid "CB QR Code Settings"
 msgstr ""
 
 #: app/Hooks/Handlers/MenuHandler.php:63
@@ -58,12 +97,12 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: app/Hooks/Handlers/PreviewAjaxHandler.php:90
+#: app/Hooks/Handlers/PreviewAjaxHandler.php:87
 msgid "Failed to generate QR code"
 msgstr ""
 
-#: app/Hooks/Handlers/SettingsAjaxHandler.php:99
-#: app/Hooks/Handlers/SettingsAjaxHandler.php:140
+#: app/Hooks/Handlers/SettingsAjaxHandler.php:110
+#: app/Hooks/Handlers/SettingsAjaxHandler.php:151
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -75,46 +114,50 @@ msgstr ""
 msgid "Insufficient permissions."
 msgstr ""
 
+#: app/Services/Settings.php:35
+msgid "Scan Me"
+msgstr ""
+
 #. translators: %s is the field name
-#: app/Services/Settings.php:61
+#: app/Services/Settings.php:183
 #, php-format
 msgid "%s is required when using custom URL mode."
 msgstr ""
 
 #. translators: %s is the field name
-#: app/Services/Settings.php:78
+#: app/Services/Settings.php:200
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: app/Services/Settings.php:92
+#: app/Services/Settings.php:214
 msgid "Please select at least one post type."
 msgstr ""
 
 #. translators: %s is the invalid post type name
-#: app/Services/Settings.php:99
+#: app/Services/Settings.php:221
 #, php-format
 msgid "Invalid post type: %s"
 msgstr ""
 
-#: app/Services/Settings.php:110
+#: app/Services/Settings.php:232
 msgid "Logo must be a valid image attachment."
 msgstr ""
 
 #. translators: %s is the unsupported image format
-#: app/Services/Settings.php:115
+#: app/Services/Settings.php:237
 #, php-format
 msgid "Logo format \"%s\" is not supported. Please use JPEG, PNG, GIF, or WebP format."
 msgstr ""
 
 #. translators: %s is the field name
-#: app/Services/Settings.php:128
+#: app/Services/Settings.php:250
 #, php-format
 msgid "%s must be a valid hex color (e.g., 000000, ffffff, or f00)."
 msgstr ""
 
-#: app/Services/Settings.php:137
-msgid "Please enter a valid URL."
+#: app/Services/Settings.php:259
+msgid "Please enter a valid http or https URL."
 msgstr ""
 
 #: app/Views/admin/appearance.php:13
@@ -144,11 +187,6 @@ msgstr ""
 
 #: app/Views/admin/appearance.php:52
 msgid "Logo Image (optional)"
-msgstr ""
-
-#: app/Views/admin/appearance.php:84
-#: app/Views/admin/appearance.php:87
-msgid "No image selected"
 msgstr ""
 
 #: app/Views/admin/appearance.php:92

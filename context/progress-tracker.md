@@ -10,7 +10,10 @@ On 2026-10-13 the repo was re-labelled from 1.0.3 to 1.0.0: the live zip
 byte-identical, and that commit is tagged `v1.0.0` with a GitHub release. The code itself never
 changed — 1.0.1–1.0.3 were GitHub-only labels on what became 1.0.0.
 
-The next WordPress.org upload is **1.0.1**.
+The next WordPress.org upload is **1.0.1**. It is prepared on `release/1.0.1` (version in all five
+places, changelog, `.pot`, `Tested up to: 7.1`), stacked on the four fix PRs — **not tagged or
+uploaded**. Pre-release checks 1, 3–9 were run on 2026-10-13 (see that PR); check 1's diff against
+the live 1.0.0 couldn't run because `cb-qr-code-org/` isn't on cb-test.
 
 ## As of 2026-10-13
 

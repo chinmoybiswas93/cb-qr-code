@@ -166,7 +166,10 @@ neither of which a CLI check exercises.
 
 Site traps (from the site-level `CLAUDE.md`): every Local DB is named `local`, cb-test's socket is
 `aRpCXvFUz`; CLI PHP and the site's web PHP (8.2.27) have different extensions — check GD under web
-PHP, not CLI, before concluding QR generation can't work.
+PHP, not CLI, before concluding QR generation can't work. **OPcache:** after a `git checkout`, the
+site's PHP-FPM keeps serving the previous branch's compiled code for a few seconds — wait (or
+request twice) before capturing, or a before/after comparison silently compares the old code with
+itself. `wp db query` doesn't get the socket and fails silently; use `wp option list --search='cbqrcode*'`.
 
 Keep `context/issues.md` and `context/progress-tracker.md` current as things land. If something
 fails, say so with the output; never describe partial work as complete.
