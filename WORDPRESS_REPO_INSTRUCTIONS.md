@@ -1,157 +1,120 @@
-# WordPress.org Repository Submission Instructions
+# Releasing to WordPress.org
 
-## CB QR Code Plugin v1.0.0
+How a new version of CB QR Code gets from `main` to
+[wordpress.org/plugins/cb-qr-code](https://wordpress.org/plugins/cb-qr-code/). Last used for 1.0.1
+(2026-10-13, SVN r3744468).
 
-### Pre-Submission Checklist
+The plugin is already approved, so releases are SVN commits — the zip upload form is only for a
+first submission. Checks to run along the way are in
+[`context/pre-release-checks.md`](context/pre-release-checks.md).
 
-#### ✅ **Security Compliance**
-- [x] FluentSecurity early sanitization pattern implemented
-- [x] Universal wp_unslash() usage for all input types
-- [x] Individual field processing (no bulk $_POST processing)
-- [x] Nonce verification + capability checks
-- [x] Proper input sanitization and output escaping
-- [x] WordPress coding standards compliance
+| Where | What |
+|---|---|
+| SVN | `https://plugins.svn.wordpress.org/cb-qr-code` — `trunk/`, `tags/<version>/`, `assets/` |
+| Download | `https://downloads.wordpress.org/plugin/cb-qr-code.<version>.zip` |
+| API | `https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request[slug]=cb-qr-code` |
+| GitHub | tag `v<version>` + a release with the same zip attached |
 
-#### ✅ **Code Quality**
-- [x] All functions prefixed with `cbqrcode_`
-- [x] All database options prefixed with `cbqrcode_`
-- [x] PHP syntax validated
-- [x] WordPress hooks and filters properly implemented
-- [x] Translation ready with proper text domain
+## 1. Prepare the version (one PR)
 
-#### ✅ **File Structure**
-- [x] Vendor dependencies cleaned (removed tests, docs, assets)
-- [x] No .git directory or hidden files
-- [x] Proper .gitignore for development
-- [x] Plugin size optimized for WordPress.org
+- Version in five places: plugin header `Version`, `CBQRCODE_PLUGIN_VERSION`, readme `Stable tag`,
+  the `app/Views/admin/about.php` fallback, the `.pot` header.
+- `readme.txt`: a changelog entry and an upgrade notice; bump `Tested up to` if a newer WordPress
+  was tested.
+- Regenerate the `.pot`:
+  `wp i18n make-pot . languages/cb-qr-code.pot --slug=cb-qr-code --domain=cb-qr-code --exclude=vendor,tests,context,.claude`
+  (run through Local's PHP with cb-test's socket — see `agent.md` → site traps).
 
----
+## 2. Make sure `main` has it
 
-## WordPress.org Submission Process
-
-### 1. **Create Submission ZIP**
-
-`.distignore` lists everything that stays out of the zip (git files, `*.md` dev docs, `context/`,
-`.claude/`, `tests/`). Build the zip from a copy in a temp folder — **never** unzip or install it
-over this git working tree, WordPress deletes the plugin folder before unpacking.
+Stacked PRs merge into their base branch, not `main`. Before going further:
 
 ```bash
-# From the plugin directory
-VERSION=1.0.0
-BUILD="$(mktemp -d)"
-rsync -a --exclude-from=.distignore ./ "$BUILD/cb-qr-code/"
-
-# Verify vendor directory is clean
-du -sh "$BUILD/cb-qr-code/vendor"  # Should be ~800KB
-
-# Create submission ZIP with version number (top-level folder must be cb-qr-code)
-(cd "$BUILD" && zip -rq "cb-qr-code-$VERSION.zip" cb-qr-code)
-mv "$BUILD/cb-qr-code-$VERSION.zip" ../
-unzip -l "../cb-qr-code-$VERSION.zip" | less   # no tests/, context/ or *.md except readme.txt
-rm -rf "$BUILD"
+git checkout main && git pull --ff-only
+grep -E '^Version|PLUGIN_VERSION' cb-qr-code.php; grep 'Stable tag' readme.txt
 ```
 
-### 2. **WordPress.org Plugin Directory**
-1. Go to https://wordpress.org/plugins/developers/add/
-2. Upload `cb-qr-code-1.0.0.zip` (main folder must be named `cb-qr-code`)
-3. Fill out plugin information:
-   - **Plugin Name**: CB QR Code
-   - **Description**: A simple QR code plugin which shows a QR Code in pages for sharing the links easily
-   - **Tags**: qr-code, qr, share, social-sharing, mobile
-   - **Tested up to**: 6.4
-   - **Requires at least**: 5.0
-   - **Requires PHP**: 8.1
+## 3. Build the zip from `main`
 
-### 3. **Plugin Assets (for WordPress.org)**
-Create these files in the plugin directory for WordPress.org:
-- `banner-772x250.png` - Plugin banner (772x250px)
-- `banner-1544x500.png` - High-res banner (1544x500px)  
-- `icon-128x128.png` - Plugin icon (128x128px)
-- `icon-256x256.png` - High-res icon (256x256px)
-- `screenshot-1.png` - Admin settings screenshot
-- `screenshot-2.png` - Frontend QR code display
-- `screenshot-3.png` - QR code customization options
+Build from `git archive` so untracked local files can't slip in. Never unzip or install it over
+this working tree — WordPress deletes the plugin folder before unpacking.
 
-### 4. **WordPress.org Requirements**
-
-#### Folder Structure
-- ✅ Main plugin folder named: `cb-qr-code`
-- ✅ ZIP file named: `cb-qr-code-{version}.zip` (e.g., `cb-qr-code-1.0.0.zip`)
-- ✅ Main plugin file: `cb-qr-code/cb-qr-code.php`
-- ✅ README file: `cb-qr-code/README.txt`
-
-#### README.txt Requirements
-Ensure README.txt includes:
-- [x] Plugin description
-- [x] Installation instructions  
-- [x] Frequently asked questions
-- [x] Changelog with version history
-- [x] Upgrade notices if applicable
-
----
-
-## Version 1.0.0 Changes (first WordPress.org release, 2025-10-04)
-
-### Security Improvements
-- ✅ Implemented FluentSecurity early sanitization pattern
-- ✅ Fixed hex color validation and processing
-- ✅ Added comprehensive input validation
-- ✅ Universal wp_unslash() implementation
-- ✅ WordPress coding standards compliance
-
-### Code Optimization  
-- ✅ Cleaned up helper functions
-- ✅ Removed redundant code and dependencies
-- ✅ Optimized vendor directory (removed tests/docs)
-- ✅ Added proper translators comments
-
-### WordPress.org Readiness
-- ✅ All security requirements met
-- ✅ Plugin size optimized (~1MB total)
-- ✅ Proper file structure and naming
-- ✅ Translation ready
-- ✅ Hook and filter implementation
-
----
-
-## Post-Submission
-
-### Repository Management
 ```bash
-# After WordPress.org approval, tag the release
-git tag v1.0.0
-git push origin v1.0.0
+VERSION=1.0.1
+WORK="$(mktemp -d)"
+mkdir "$WORK/src" "$WORK/build"
+git archive main | tar -x -C "$WORK/src"
+rsync -a --exclude-from=.distignore "$WORK/src/" "$WORK/build/cb-qr-code/"
+(cd "$WORK/build" && zip -rqX "../cb-qr-code-$VERSION.zip" cb-qr-code)
 
-# Create release branch for WordPress.org
-git checkout -b wordpress-org
-git push origin wordpress-org
+unzip -Z1 "$WORK/cb-qr-code-$VERSION.zip" | grep -E '/(tests|context|\.claude)/|\.md$|/\.git'   # expect nothing
+shasum -a 256 "$WORK/cb-qr-code-$VERSION.zip"
 ```
 
-### Documentation Updates
-1. Update GitHub README with WordPress.org link
-2. Add changelog to repository
-3. Create user documentation
-4. Update development instructions
+Run Plugin Check on the extracted build (pre-release check 5) before publishing.
 
-### Maintenance
-- Monitor WordPress.org reviews and feedback
-- Respond to user support requests
-- Plan future updates and features
-- Maintain security compliance
+## 4. Tag and GitHub release
 
----
+```bash
+git tag -a "v$VERSION" -m "CB QR Code $VERSION" main
+git push origin "v$VERSION"
+gh release create "v$VERSION" "$WORK/cb-qr-code-$VERSION.zip" --title "$VERSION" --notes-file notes.md --latest
+```
 
-## Contact & Support
+Notes follow the earlier releases: the readme changelog entry, a short "What's Changed" list of
+PRs, and the zip's SHA-256.
 
-- **Plugin URI**: https://github.com/chinmoybiswas93/cb-qr-code
-- **Author**: Chinmoy Biswas
-- **Author URI**: https://github.com/chinmoybiswas93
-- **Support**: Plugin support via WordPress.org forums
-- **License**: GPL-2.0+
+## 5. SVN: stage trunk and the tag
 
----
+```bash
+svn co --depth immediates https://plugins.svn.wordpress.org/cb-qr-code "$WORK/svn"
+cd "$WORK/svn"
+svn up --set-depth infinity trunk
+svn up --set-depth immediates tags assets
 
-**Status**: ✅ Ready for WordPress.org submission  
-**Security Grade**: A+ (FluentSecurity compliant)  
-**File Size**: ~1MB (optimized)  
-**Last Updated**: Version 1.0.0
+# trunk must still be the previous release — if not, someone committed to SVN directly; stop and look.
+gh release download "v<previous>" -p '*.zip' -D "$WORK/prev" && unzip -q "$WORK/prev/"*.zip -d "$WORK/prev"
+diff -rq --exclude=.svn trunk "$WORK/prev/cb-qr-code"
+
+rsync -a --delete --exclude=.svn "$WORK/build/cb-qr-code/" trunk/
+svn status trunk | awk '$1=="?"{print $2}' | xargs -I{} svn add -q --parents "{}"
+svn status trunk | awk '$1=="!"{print $2}' | xargs -I{} svn rm -q "{}"
+svn cp trunk "tags/$VERSION"
+
+svn status | awk '{print $1}' | sort | uniq -c        # sanity-check the A/M/D counts
+diff -rq --exclude=.svn "tags/$VERSION" "$WORK/build/cb-qr-code"   # expect nothing
+```
+
+`assets/` (banners, icon, screenshots) is untouched by a release.
+
+## 6. Commit — maintainer only
+
+The commit ships the version to every site running the plugin and needs the maintainer's
+WordPress.org password, so the maintainer runs it in their own terminal:
+
+```bash
+svn ci "$WORK/svn" -m "Release $VERSION" --username <wordpress.org-username>
+```
+
+## 7. Confirm it's live
+
+The API picked up 1.0.1 within a minute.
+
+```bash
+curl -s 'https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request[slug]=cb-qr-code' \
+  | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d["version"], d["requires_php"], d["tested"])'
+curl -sL -o live.zip "https://downloads.wordpress.org/plugin/cb-qr-code.$VERSION.zip"
+unzip -q live.zip -d live && diff -rq live/cb-qr-code "$WORK/build/cb-qr-code"   # expect nothing
+```
+
+Then update `context/progress-tracker.md` (phase, release date, SVN revision).
+
+## Other SVN changes
+
+- **Readme only** (e.g. `Tested up to` after a WordPress release): edit `readme.txt` in `trunk/`
+  and in `tags/<stable>/`, commit both. No version bump.
+- **Banners, icon, screenshots:** the SVN `assets/` folder, not the plugin. Names that work:
+  `banner-772x250.png`, `banner-1544x500.png`, `icon.svg` (or `icon-128x128.png` /
+  `icon-256x256.png`), `screenshot-N.png` matching the `== Screenshots ==` captions in the readme.
+- **Rolling back:** set `Stable tag` in `trunk/readme.txt` to the previous tag and commit. Don't
+  delete or edit an existing tag.
