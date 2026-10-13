@@ -20,6 +20,92 @@ class Settings
     public static function cbqrcode_get_current_settings() {
         return get_option('cbqrcode_settings', []);
     }
+
+    /**
+     * The one source of setting defaults. Before 1.0.1 each reader had its own
+     * (size was 120, 150 or 300; font size '12px' rendered as 12pxpx — issue #6).
+     * These are the values a fresh install has always rendered on the frontend.
+     *
+     * @return array<string, mixed>
+     */
+    public static function cbqrcode_get_defaults() {
+        return [
+            'cbqrcode-url-mode' => 'permalink',
+            'cbqrcode-custom-url' => '',
+            'qr-code-label' => __('Scan Me', 'cb-qr-code'),
+            'qr-code-size' => 120,
+            'qr-code-margin' => 2,
+            'qr-code-dark' => '000000',
+            'qr-code-light' => 'ffffff',
+            'qr-code-logo-id' => 0,
+            'qr-code-logo-url' => '',
+            'qr-code-logo-size' => 50,
+            'qr-code-font-size' => 12,
+            'qr-code-position' => 'right',
+        ];
+    }
+
+    /**
+     * Inclusive [min, max] for each numeric appearance setting — the generator's
+     * clamps (size, margin, logo size) and the form's min/max (font size).
+     *
+     * @return array<string, int[]>
+     */
+    public static function cbqrcode_get_number_ranges() {
+        return [
+            'qr-code-size' => [50, 1000],
+            'qr-code-margin' => [0, 20],
+            'qr-code-logo-size' => [10, 100],
+            'qr-code-font-size' => [6, 100],
+        ];
+    }
+
+    /**
+     * A numeric appearance value clamped to its range; the default when the value
+     * is empty or not a number (a cleared field posts '').
+     *
+     * @param string $key   A key of cbqrcode_get_number_ranges().
+     * @param mixed  $value Raw or stored value.
+     * @return int
+     */
+    public static function cbqrcode_sanitize_number($key, $value) {
+        $defaults = self::cbqrcode_get_defaults();
+        if (!is_scalar($value) || !is_numeric(trim((string) $value))) {
+            return (int) $defaults[$key];
+        }
+        list($min, $max) = self::cbqrcode_get_number_ranges()[$key];
+        return max($min, min($max, (int) $value));
+    }
+
+    /**
+     * 'left' or 'right'; anything else is the default.
+     *
+     * @param mixed $value Raw or stored value.
+     * @return string
+     */
+    public static function cbqrcode_sanitize_position($value) {
+        $value = is_string($value) ? sanitize_key($value) : '';
+        return in_array($value, ['left', 'right'], true) ? $value : self::cbqrcode_get_defaults()['qr-code-position'];
+    }
+
+    /**
+     * Stored settings over the defaults, with numbers and position normalized, for
+     * rendering. Values saved before 1.0.1 were never range-checked (issue #5), so
+     * the clamps run on read as well as on save. Use cbqrcode_get_current_settings()
+     * for the raw option.
+     *
+     * @return array<string, mixed>
+     */
+    public static function cbqrcode_get_resolved_settings() {
+        $stored = self::cbqrcode_get_current_settings();
+        $settings = array_merge(self::cbqrcode_get_defaults(), is_array($stored) ? $stored : []);
+        foreach (array_keys(self::cbqrcode_get_number_ranges()) as $key) {
+            $settings[$key] = self::cbqrcode_sanitize_number($key, $settings[$key]);
+        }
+        $settings['qr-code-position'] = self::cbqrcode_sanitize_position($settings['qr-code-position']);
+        return $settings;
+    }
+
     public static function cbqrcode_get_allowed_post_types() {
         $post_types = get_option('cbqrcode_post_types', ['post', 'page']);
         $post_types = array_diff($post_types, ['attachment']);

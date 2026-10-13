@@ -1,6 +1,7 @@
 jQuery(document).ready(function ($) {
   const settingsForm = $("#cbqrcode-settings-form");
   const appearanceForm = $("#cbqrcode-appearance-form");
+  const i18n = CBQRCodeAjax.i18n;
 
 
   let mediaUploader;
@@ -12,9 +13,9 @@ jQuery(document).ready(function ($) {
     }
 
     mediaUploader = wp.media({
-      title: 'Select Logo Image',
+      title: i18n.select_logo,
       button: {
-        text: 'Use this image'
+        text: i18n.use_image
       },
       library: {
         type: 'image'
@@ -30,7 +31,7 @@ jQuery(document).ready(function ($) {
       $('#qr-code-logo-url').val(attachment.url);
       
 
-      let displayName = attachment.filename || attachment.title || 'Selected image';
+      let displayName = attachment.filename || attachment.title || i18n.selected_image;
       if (displayName.length > 25) {
         const lastDotIndex = displayName.lastIndexOf('.');
         const extension = lastDotIndex !== -1 ? displayName.substring(lastDotIndex) : '';
@@ -62,7 +63,7 @@ jQuery(document).ready(function ($) {
     $('#qr-code-logo-url').val('');
     
 
-    $('.cbqrcode-selected-image-name').text('No image selected');
+    $('.cbqrcode-selected-image-name').text(i18n.no_image);
     
 
     $('.cbqrcode-remove-media').hide();
@@ -82,7 +83,12 @@ jQuery(document).ready(function ($) {
     removeMediaSelection();
   });
 
+  // Preview requests fire on every input and change, so responses can arrive out of
+  // order; only the latest request's response is rendered (issue #13).
+  let previewRequest = 0;
+
   function generateQrCodePreview() {
+    const requestId = ++previewRequest;
     const formFields = $("#cbqrcode-appearance-form").serializeArray();
     const filteredFields = formFields.filter(field => field.name !== 'action' && field.name !== 'tab');
     const formData = $.param(filteredFields) +
@@ -94,12 +100,18 @@ jQuery(document).ready(function ($) {
       data: formData,
       dataType: "json",
       success: function (response) {
+        if (requestId !== previewRequest) {
+          return;
+        }
         if (response.success) {
           $("#cbqrcode-preview").html(response.data.html);
         }
       },
       error: function () {
-        $("#cbqrcode-preview").html('<p>Error generating preview</p>');
+        if (requestId !== previewRequest) {
+          return;
+        }
+        $("#cbqrcode-preview").html('<p>' + i18n.preview_error + '</p>');
       }
     });
   }
@@ -119,7 +131,7 @@ jQuery(document).ready(function ($) {
       dataType: "json",
       success: function (response) {
         const dismissBtn =
-          '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
+          '<button type="button" class="notice-dismiss"><span class="screen-reader-text">' + i18n.dismiss + '</span></button>';
         if (response.success) {
           const noticeHtml = '<div class="notice notice-success is-dismissible">' +
             dismissBtn + "<p>" + response.data.message + "</p></div>";
@@ -130,7 +142,7 @@ jQuery(document).ready(function ($) {
             form.before(noticeHtml);
           }
         } else {
-          const errors = response.data.errors || ["An error occurred."];
+          const errors = response.data.errors || [i18n.error];
           let errorHtml = '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +
             dismissBtn + "<ul>";
           $.each(errors, function (i, err) {
@@ -147,10 +159,10 @@ jQuery(document).ready(function ($) {
       },
       error: function (xhr) {
         const dismissBtn =
-          '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
-        let errorMsg = "An unexpected error occurred.";
+          '<button type="button" class="notice-dismiss"><span class="screen-reader-text">' + i18n.dismiss + '</span></button>';
+        let errorMsg = i18n.unexpected_error;
         if (xhr.status === 403) {
-          errorMsg = "Security check failed (invalid or expired nonce). Please reload the page and try again.";
+          errorMsg = i18n.nonce_error;
         }
         
         const errorHtml = '<div class="notice notice-error is-dismissible" style="margin-top:20px;">' +

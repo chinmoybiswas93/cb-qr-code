@@ -58,16 +58,18 @@ class SettingsAjaxHandler
             ];
             $this->cbqrcode_handle_settings_tab($sanitized_input);
         } else {
+            // Numbers are clamped to the generator's ranges and position is whitelisted
+            // here, at input (issue #5); an empty or non-numeric value saves the default.
             $sanitized_input = [
                 'qr-code-label' => sanitize_text_field(wp_unslash($_POST['qr-code-label'] ?? '')),
-                'qr-code-size' => intval(wp_unslash($_POST['qr-code-size'] ?? 150)),
-                'qr-code-margin' => intval(wp_unslash($_POST['qr-code-margin'] ?? 2)),
+                'qr-code-size' => Settings::cbqrcode_sanitize_number('qr-code-size', sanitize_text_field(wp_unslash($_POST['qr-code-size'] ?? ''))),
+                'qr-code-margin' => Settings::cbqrcode_sanitize_number('qr-code-margin', sanitize_text_field(wp_unslash($_POST['qr-code-margin'] ?? ''))),
                 'qr-code-dark' => sanitize_text_field(wp_unslash($_POST['qr-code-dark'] ?? '000000')),
                 'qr-code-light' => sanitize_text_field(wp_unslash($_POST['qr-code-light'] ?? 'ffffff')),
                 'qr-code-logo-id' => intval(wp_unslash($_POST['qr-code-logo-id'] ?? 0)),
-                'qr-code-logo-size' => intval(wp_unslash($_POST['qr-code-logo-size'] ?? 50)),
-                'qr-code-font-size' => intval(wp_unslash($_POST['qr-code-font-size'] ?? 12)),
-                'qr-code-position' => sanitize_text_field(wp_unslash($_POST['qr-code-position'] ?? ''))
+                'qr-code-logo-size' => Settings::cbqrcode_sanitize_number('qr-code-logo-size', sanitize_text_field(wp_unslash($_POST['qr-code-logo-size'] ?? ''))),
+                'qr-code-font-size' => Settings::cbqrcode_sanitize_number('qr-code-font-size', sanitize_text_field(wp_unslash($_POST['qr-code-font-size'] ?? ''))),
+                'qr-code-position' => Settings::cbqrcode_sanitize_position(sanitize_text_field(wp_unslash($_POST['qr-code-position'] ?? '')))
             ];
             $this->cbqrcode_handle_appearance_tab($sanitized_input);
         }

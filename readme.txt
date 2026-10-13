@@ -3,8 +3,8 @@ Contributors: chinmoy709
 Donate link: https://github.com/chinmoybiswas93/cb-qr-code
 Tags: qr code, sharing, shortcode, post, page
 Requires at least: 6.0
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 7.1
+Stable tag: 1.0.1
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -66,6 +66,18 @@ Yes, visitors can click on the QR code to copy the link to their clipboard. Visu
 
 == Changelog ==
 
+= 1.0.1 =
+* Fix: QR codes for posts with non-Latin (percent-encoded) permalinks pointed to a broken URL.
+* Fix: the admin preview encoded `&` in custom URLs as `&#038;`.
+* Fix: the QR code is added only to the main post's content, not to other posts shown on the same page (Query Loop, related posts).
+* Fix: the label font size rendered as `12pxpx` on new installs.
+* Fix: older preview responses could overwrite newer ones while editing.
+* Security: custom URLs must be http or https.
+* Security: QR size, margin, logo size and font size are clamped to their ranges; position is limited to left/right.
+* Improvement: frontend CSS/JS load only where a QR code can appear.
+* Improvement: admin menu titles and admin script messages are translatable.
+* Improvement: deleting the plugin removes its settings.
+
 = 1.0.0 =
 * Initial release
 * Local QR code generation using endroid/qr-code library
@@ -76,6 +88,9 @@ Yes, visitors can click on the QR code to copy the link to their clipboard. Visu
 * Developer hooks for extensibility
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Fixes broken QR codes for non-Latin permalinks and duplicate QR codes in Query Loops, restricts custom URLs to http/https, and removes settings on uninstall.
 
 = 1.0.0 =
 Initial release of CB QR Code plugin with local QR generation and customizable appearance options.

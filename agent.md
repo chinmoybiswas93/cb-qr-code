@@ -55,11 +55,15 @@ app/                  ChinmoyBiswas\CBQRCode\App\
   Services/
     QRGenerator.php   Static: generate() → PNG data URI, hex_to_rgb(), logo/attachment checks
     Settings.php      Static: settings getters, field definitions, cbqrcode_validate_fields(),
-                      cbqrcode_get_custom_url() / cbqrcode_is_http_url() (http/https only)
+                      cbqrcode_get_custom_url() / cbqrcode_is_http_url() (http/https only),
+                      cbqrcode_get_defaults() — the only defaults source — and
+                      cbqrcode_get_resolved_settings() (stored over defaults, clamped)
   Views/admin/        header, appearance, settings, about, support — data passed in by
                       MenuHandler ($settings, $post_types, $allowed_post_types)
 assets/js/            admin-script.js (save/preview/media), admin-tabs.js, script.js (click-to-copy)
 languages/            cb-qr-code.pot
+uninstall.php         Deletes both options (per site on multisite). Every spec that stores
+                      new data adds its cleanup here in the same PR (spec 8)
 tests/                Snapshot/compare/browser harness — see tests/README.md. Not shipped
 .distignore           What stays out of the WordPress.org zip
 ```
@@ -74,7 +78,7 @@ never loads in `admin-ajax.php`.
 | Options | `cbqrcode_settings` (array), `cbqrcode_post_types` (array) — no tables, no transients |
 | Settings keys | Hyphenated, identical to the form field names: `qr-code-size`, `cbqrcode-url-mode`, … Renaming a field renames a stored key |
 | AJAX actions | `cbqrcode_save_settings`, `cbqrcode_preview` |
-| Nonce | action `cbqrcode_ajax_nonce`, POST field `security`, JS global `CBQRCodeAjax.{ajax_url,nonce}` |
+| Nonce | action `cbqrcode_ajax_nonce`, POST field `security`, JS global `CBQRCodeAjax.{ajax_url,nonce}` (plus `i18n`, strings only — not a contract) |
 | Public filters | `cbqrcode_before_qr_code`, `cbqrcode_after_qr_code` — `( $html, $post_type, $settings )`. Third-party API |
 | Admin page | slug `cbqrcode_admin_dashboard`, hook `toplevel_page_cbqrcode_admin_dashboard` |
 | CSS prefix | `cbqrcode-` |
@@ -162,7 +166,10 @@ neither of which a CLI check exercises.
 
 Site traps (from the site-level `CLAUDE.md`): every Local DB is named `local`, cb-test's socket is
 `aRpCXvFUz`; CLI PHP and the site's web PHP (8.2.27) have different extensions — check GD under web
-PHP, not CLI, before concluding QR generation can't work.
+PHP, not CLI, before concluding QR generation can't work. **OPcache:** after a `git checkout`, the
+site's PHP-FPM keeps serving the previous branch's compiled code for a few seconds — wait (or
+request twice) before capturing, or a before/after comparison silently compares the old code with
+itself. `wp db query` doesn't get the socket and fails silently; use `wp option list --search='cbqrcode*'`.
 
 Keep `context/issues.md` and `context/progress-tracker.md` current as things land. If something
 fails, say so with the output; never describe partial work as complete.

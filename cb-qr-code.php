@@ -2,7 +2,7 @@
 /*
 Plugin Name: CB QR Code 
 Description: A simple QR code plugin which shows a QR Code in pages for sharing the links easily.
-Version: 1.0.0
+Version: 1.0.1
 Requires at least: 6.0
 Requires PHP: 8.1
 Author: Chinmoy Biswas
@@ -22,7 +22,7 @@ if (!defined('CBQRCODE_PLUGIN_URL')) {
     define('CBQRCODE_PLUGIN_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('CBQRCODE_PLUGIN_VERSION')) {
-    define('CBQRCODE_PLUGIN_VERSION', '1.0.0');
+    define('CBQRCODE_PLUGIN_VERSION', '1.0.1');
 }
 
 if (file_exists(CBQRCODE_PLUGIN_PATH . 'vendor/autoload.php')) {

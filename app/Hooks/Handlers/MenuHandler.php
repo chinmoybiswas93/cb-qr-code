@@ -33,8 +33,8 @@ class MenuHandler
     public function cbqrcode_add_admin_menu()
     {
         add_menu_page(
-            'CB QR Code Settings',
-            'CB QR Code',
+            __('CB QR Code Settings', 'cb-qr-code'),
+            __('CB QR Code', 'cb-qr-code'),
             'manage_options',
             'cbqrcode_admin_dashboard',
             [$this, 'cbqrcode_settings_page'],
@@ -51,7 +51,7 @@ class MenuHandler
         echo '<div class="cbqrcode-dashboard">';
         $view = App::view();
         $data = [
-            'settings'           => Settings::cbqrcode_get_current_settings(),
+            'settings'           => Settings::cbqrcode_get_resolved_settings(),
             'post_types'         => $this->cbqrcode_get_public_post_types(),
             'allowed_post_types' => Settings::cbqrcode_get_allowed_post_types(),
         ];

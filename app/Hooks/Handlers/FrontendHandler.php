@@ -33,8 +33,15 @@ class FrontendHandler
 
     public function cbqrcode_enqueue_scripts()
     {
-        wp_enqueue_style('cbqrcode-frontend-style', CBQRCODE_PLUGIN_URL . 'assets/css/style.css', [], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), 'all');
-        wp_enqueue_script('cbqrcode-frontend-script', CBQRCODE_PLUGIN_URL . 'assets/js/script.js', ['jquery'], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), true);
+        // Only where cbqrcode_append_qr_code() can render: a singular view of an
+        // allowed post type (issue #10). jQuery comes with script.js, so this also
+        // keeps it off every other page.
+        if (!is_singular() || !in_array(get_post_type(get_queried_object_id()), Settings::cbqrcode_get_allowed_post_types(), true)) {
+            return;
+        }
+
+        wp_enqueue_style('cbqrcode-frontend-style', CBQRCODE_PLUGIN_URL . 'assets/css/style.css', [], CBQRCODE_PLUGIN_VERSION, 'all');
+        wp_enqueue_script('cbqrcode-frontend-script', CBQRCODE_PLUGIN_URL . 'assets/js/script.js', ['jquery'], CBQRCODE_PLUGIN_VERSION, true);
     }
     public function cbqrcode_append_qr_code($content)
     {
@@ -54,19 +61,21 @@ class FrontendHandler
         if (!in_array($post_type, $allowed_post_types))
             return $content;
 
+        // The public filters keep getting the raw stored option, as in 1.0.0;
+        // rendering uses it merged over the defaults and clamped (issues #5, #6).
         $settings = Settings::cbqrcode_get_current_settings();
+        $resolved = Settings::cbqrcode_get_resolved_settings();
         $custom_url = Settings::cbqrcode_get_custom_url();
         $qr_url_text = $custom_url !== '' ? $custom_url : get_permalink($post_id);
-        $size = $settings['qr-code-size'] ?? 120;
-        $margin = $settings['qr-code-margin'] ?? 2;
-        $dark = $settings['qr-code-dark'] ?? '000000';
-        $light = $settings['qr-code-light'] ?? 'ffffff';
-        $label = $settings['qr-code-label'] ?? __('Scan Me', 'cb-qr-code');
-        $logo_id = $settings['qr-code-logo-id'] ?? 0;
-        $logo_url = $settings['qr-code-logo-url'] ?? '';
-        $logo_size = $settings['qr-code-logo-size'] ?? 50;
-        $fontSize = $settings['qr-code-font-size'] ?? '12px';
-        $position = $settings['qr-code-position'] ?? 'right';
+        $size = $resolved['qr-code-size'];
+        $margin = $resolved['qr-code-margin'];
+        $dark = $resolved['qr-code-dark'];
+        $light = $resolved['qr-code-light'];
+        $label = $resolved['qr-code-label'];
+        $logo_id = $resolved['qr-code-logo-id'];
+        $logo_size = $resolved['qr-code-logo-size'];
+        $fontSize = $resolved['qr-code-font-size'];
+        $position = $resolved['qr-code-position'];
 
         $foreground = QRGenerator::hex_to_rgb($dark);
         $background = QRGenerator::hex_to_rgb($light);
@@ -94,11 +103,11 @@ class FrontendHandler
 
         $position_class = ($position == 'left') ? 'cbqrcode-left' : 'cbqrcode-right';
         $qr_html = sprintf(
-            '<div class="cbqrcode-qr %s" data-url="%s"><div>%s</div><div class="cbqrcode-label" style="font-size:%spx">%s</div><img src="%s" alt="%s" style="width: %dpx; height: %dpx;"><div>%s</div></div>',
+            '<div class="cbqrcode-qr %s" data-url="%s"><div>%s</div><div class="cbqrcode-label" style="font-size:%dpx">%s</div><img src="%s" alt="%s" style="width: %dpx; height: %dpx;"><div>%s</div></div>',
             esc_attr($position_class),
             esc_url($qr_url_text),
             wp_kses_post($before_qr),
-            esc_attr($fontSize),
+            absint($fontSize),
             esc_html($label),
             esc_attr($qr_data_uri), 
             esc_attr(__('QR Code', 'cb-qr-code')),

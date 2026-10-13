@@ -64,9 +64,9 @@ async (page, CFG) => {
   // 3. Live preview follows the label and colour.
   await withPreview(() => page.fill('#qr-code-label', 'Browser QR'));
   check('3 preview label follows input', (await page.locator('#cbqrcode-preview .cbqrcode-label').textContent()).trim() === 'Browser QR');
-  // Blur the label and let its `change` preview land first. Preview requests
-  // aren't sequenced (issues.md #13), so an in-flight old-colour response could
-  // otherwise overwrite the new one and make this check flaky.
+  // Blur the label and let its `change` preview land first. Before 1.0.1 preview
+  // requests weren't sequenced (issues.md #13), so an in-flight old-colour response
+  // could overwrite the new one and make this check flaky on those versions.
   await withPreview(() => page.locator('#qr-code-label').evaluate((el) => el.blur()));
   const before = await previewSrc();
   await withPreview(() => page.fill('#qr-code-dark', 'aa0000'));
