@@ -33,8 +33,8 @@ class MenuHandler
     public function cbqrcode_add_admin_menu()
     {
         add_menu_page(
-            'CB QR Code Settings',
-            'CB QR Code',
+            __('CB QR Code Settings', 'cb-qr-code'),
+            __('CB QR Code', 'cb-qr-code'),
             'manage_options',
             'cbqrcode_admin_dashboard',
             [$this, 'cbqrcode_settings_page'],

@@ -33,8 +33,15 @@ class FrontendHandler
 
     public function cbqrcode_enqueue_scripts()
     {
-        wp_enqueue_style('cbqrcode-frontend-style', CBQRCODE_PLUGIN_URL . 'assets/css/style.css', [], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), 'all');
-        wp_enqueue_script('cbqrcode-frontend-script', CBQRCODE_PLUGIN_URL . 'assets/js/script.js', ['jquery'], defined('CBQRCODE_PLUGIN_VERSION') ? CBQRCODE_PLUGIN_VERSION : time(), true);
+        // Only where cbqrcode_append_qr_code() can render: a singular view of an
+        // allowed post type (issue #10). jQuery comes with script.js, so this also
+        // keeps it off every other page.
+        if (!is_singular() || !in_array(get_post_type(get_queried_object_id()), Settings::cbqrcode_get_allowed_post_types(), true)) {
+            return;
+        }
+
+        wp_enqueue_style('cbqrcode-frontend-style', CBQRCODE_PLUGIN_URL . 'assets/css/style.css', [], CBQRCODE_PLUGIN_VERSION, 'all');
+        wp_enqueue_script('cbqrcode-frontend-script', CBQRCODE_PLUGIN_URL . 'assets/js/script.js', ['jquery'], CBQRCODE_PLUGIN_VERSION, true);
     }
     public function cbqrcode_append_qr_code($content)
     {

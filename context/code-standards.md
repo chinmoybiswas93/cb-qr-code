@@ -75,8 +75,9 @@ Render from `Settings::cbqrcode_get_resolved_settings()`; the raw option
 ## i18n
 
 Text domain `cb-qr-code` on every user-visible PHP string. `/* translators: */` above every
-`sprintf` with a placeholder. JS strings are currently hard-coded English; if you add or touch
-one, pass it through `wp_localize_script()` rather than adding more.
+`sprintf` with a placeholder. JS strings come from `CBQRCodeAjax.i18n`
+(`AdminAssetHandler`): add new ones there, `esc_html__()` for any the JS inserts with `.html()`,
+`__()` for `.text()` and `wp.media` options.
 
 ## Assets
 

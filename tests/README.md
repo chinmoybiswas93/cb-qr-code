@@ -77,5 +77,6 @@ tests/browser.sh my-branch
   WordPress for their own session, so their requests reach the capability check.
 - **`browser.sh` runs from a temp dir.** `playwright-cli` writes `.playwright-cli/` logs into the cwd
   and echoes the script back, credentials included. Only the result block is printed.
-- **The colour-preview check waits for the label's blur preview first.** Preview responses aren't
-  sequenced (`context/issues.md` #13).
+- **The colour-preview check waits for the label's blur preview first.** That was needed while
+  preview responses weren't sequenced (`context/issues.md` #13, fixed in 1.0.1). It still lets the
+  check run against older versions.

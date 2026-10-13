@@ -76,7 +76,7 @@ never loads in `admin-ajax.php`.
 | Options | `cbqrcode_settings` (array), `cbqrcode_post_types` (array) — no tables, no transients |
 | Settings keys | Hyphenated, identical to the form field names: `qr-code-size`, `cbqrcode-url-mode`, … Renaming a field renames a stored key |
 | AJAX actions | `cbqrcode_save_settings`, `cbqrcode_preview` |
-| Nonce | action `cbqrcode_ajax_nonce`, POST field `security`, JS global `CBQRCodeAjax.{ajax_url,nonce}` |
+| Nonce | action `cbqrcode_ajax_nonce`, POST field `security`, JS global `CBQRCodeAjax.{ajax_url,nonce}` (plus `i18n`, strings only — not a contract) |
 | Public filters | `cbqrcode_before_qr_code`, `cbqrcode_after_qr_code` — `( $html, $post_type, $settings )`. Third-party API |
 | Admin page | slug `cbqrcode_admin_dashboard`, hook `toplevel_page_cbqrcode_admin_dashboard` |
 | CSS prefix | `cbqrcode-` |
